@@ -4,10 +4,10 @@ grammar MiniAda;
    public static void main(String[] args) throws Exception {
       MiniAdaLexer lex = new MiniAdaLexer(new ANTLRFileStream(args[0]));
       CommonTokenStream tokens = new CommonTokenStream(lex);
-      MiniAdaParser parse = new MiniAdaParser(tokens);
+      MiniAdaParser adaparse = new MiniAdaParser(tokens);
       
       try {
-         parse.compilation();
+         adaparse.compilation();
       } catch (RecognitionException e) {
          e.printStackTrace();
       }
@@ -18,16 +18,18 @@ grammar MiniAda;
 // GRAMMAR RULES
 //
 
-compilation: (pragma_list compilation_unit)+;
-pragma_list: pragma*;
-pragma: 'pragma' id ';';
-compilation_unit: pkg_decl;
+compilation: (direc* compilation_unit)+ EOF;
+direc: ('with'|'use') lib_name (',' lib_name)+ ';'
+     | pragma;
+lib_name: id ('.' id)*;
+pragma: 'pragma' id ('(' pragma_arg (',' pragma_arg)* ')')? ';';
+pragma_arg: (id '=>')? expr;
+compilation_unit: pkg_decl | subprogram;
 
-pkg_decl: 'package' pkg_spec_or_body ';';
-pkg_spec_or_body: id 'is' spec_decl* private_part? body_part? 'end' id? ';'
-                | 'body' id 'is' body_decl* statement_part? exception_part? 'end' id? ';';
+pkg_decl: 'package' (pkg_spec|pkg_body) ';';
+pkg_spec: id 'is' spec_decl* private_part? 'end' id?;
+pkg_body: 'body' id 'is' body_decl* statement_part? exception_part? 'end' id?;
 
-body_part: 'body' body_decl* statement_part? exception_part?;
 spec_decl: private_type_decl
          | decl;
 
@@ -38,7 +40,7 @@ private_part: 'private' private_item+;
 private_item: 'subtype' id 'is' subtype_def ';'
             | 'type' id 'is' type_def ';';
 
-body_decl: subprogram_spec subprogram_body? ';'
+body_decl: subprogram
          | object_decl
          | type_decl
          | subtype_decl
@@ -46,7 +48,9 @@ body_decl: subprogram_spec subprogram_body? ';'
          | 'use' name_list ';'
          | id_list ':' 'exception' ';';
 
-subprogram_body: 'is' body_decl 'begin' statement+ exception_part? 'end' id?;
+subprogram: subprogram_spec subprogram_body? ';';
+
+subprogram_body: 'is' body_decl* 'begin' statement+ exception_part? 'end' id?;
 
 decl: object_decl
     | type_decl
@@ -89,7 +93,8 @@ unconstrained_index_list: '(' index_subtype_def (',' index_subtype_def)* ')';
 index_subtype_def: id 'range' '<>';
 
 constrained_array_def: 'array' constrained_index_list 'of' element_type;
-constrained_index_list: '(' discrete_range (',' discrete_range)* ')';
+constrained_index_list: '(' index_range (',' index_range)* ')';
+index_range: 'range' range;
 element_type: type_or_subtype;
 
 enum_type_def: '(' id_list ')';
@@ -99,20 +104,13 @@ subtype_decl: 'subtype' id 'is' subtype_def ';';
 subtype_def: id (range_constraint | index_constraint)
            | range_constraint;
 
-range_constraint: 'range' range;
+range_constraint: 'range' range
+                | 'range' '<>';
 range: simple_expr '..' simple_expr;
 index_constraint: '(' discrete_range (',' discrete_range)* ')';
 
-// old version, non-LL(*)
-/*
-discrete_range: subtype_def
+discrete_range: id (range_constraint| TICK 'range')?
               | range;
-*/
-
-// new version, LL(*) but recognizes slightly different input
-discrete_range: id (range_constraint| '\'' 'range')?
-              | range;
-// end changes
 
 subprogram_decl: subprogram_spec ';';
 subprogram_spec: 'procedure' id formal_part_opt
@@ -134,7 +132,7 @@ exception_when_suffix: 'others' '=>' statement+
                      | name ('|' name)* '=>' statement+;
 statement: pragma
          | null_stmt
-         | name assign_or_call
+         | name assign? ';'
          | block
          | loop_stmt
          | if_stmt
@@ -142,8 +140,7 @@ statement: pragma
          | return_stmt
          | case_stmt
          | raise_stmt;
-assign_or_call: ':=' name ';'
-              | ';';
+assign: ':=' expr;
 null_stmt: 'null' ';';
 block: (id ':')? decl_part 'begin' statement+ exception_part? 'end' id? ';';
 decl_part: 'declare' body_decl*;
@@ -155,7 +152,7 @@ else_part: 'else' statement+;
 loop_stmt: (id ':')? it_clause basic_loop ';';
 basic_loop: 'loop' statement+ 'end' 'loop';
 it_clause: 'while' expr
-         | 'for' id 'in' 'reverse'? discrete_range 'loop' statement+ 'end' 'loop' ';';
+         | 'for' id 'in' 'reverse'? discrete_range;
 exit_stmt: 'exit' name? ('when' expr)? ';';
 case_stmt: 'case' expr 'is' ('when' when)* ('when' other) 'end' 'case' ';';
 when: choice ('|' choice)* '=>' statement+;
@@ -202,23 +199,12 @@ literal: INT
 name: id name_suffix* '.all'?;
 name_suffix: '.' selected_suffix
            | '(' expr (',' expr)* ')'
-           | '`' id;
+           | TICK id;
 selected_suffix: id
                | operator_symbol;
 
-agg: '`' '(' component (',' component)* ')';
+agg: TICK '(' component (',' component)* ')';
 
-// old version, non-LL(*)
-/*
-component: agg_choice ('|' agg_choice)* '=>' expr
-         | expr;
-agg_choice: range
-          | simple_expr
-          | subtype_def
-          | 'others';
-*/
-
-// new version, LL(*) but recognizes slightly different input
 component: expr (('..' simple_expr)? component_tail)?
          | id range_constraint component_tail
          | 'others' component_tail;
@@ -228,7 +214,6 @@ component_tail: ('|' agg_choice)* '=>' expr;
 agg_choice: simple_expr ('..' simple_expr)?
           | id range_constraint
           | 'others';
-// end changes
 
 name_list: name (',' name)*;
 
@@ -236,8 +221,9 @@ name_list: name (',' name)*;
 // LEXER RULES
 //
 
+TICK: '`';
 CHAR: '\'' . '\'';
-STR: '"' ('"' '"' | ~('"' | EOL))* '"';
+STR: '"' ~('"' | EOL)* '"';
 NAME: ALPHA ('_'? (ALPHA|DIGIT))*;
 INT: INT_NUM EXP?;
 FLOAT: INT_NUM '.' INT_NUM EXP?;
