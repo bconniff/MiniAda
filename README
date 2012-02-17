@@ -1,0 +1,4 @@
+MINIADA
+
+MiniAda is a simple compiler for a subset of Ada written in Java using ANTLR,
+targeting the SPARC architecture.
