@@ -1,4 +1,64 @@
-MINIADA
+README
 
 MiniAda is a simple compiler for a subset of Ada written in Java using ANTLR,
-targeting the SPARC architecture.
+targeting the SPARC architecture. This project is a work in progress, and
+currently only provides a parser.
+
+MiniAda is developed by two students at Radford University, bconniff
+(github.com/bconniff) and jdominic (github.com/jdominic). All code is property
+of Radford University.
+
+COMPILATION
+
+To compile the parser on a UNIX-like system, use the command:
+
+   make
+
+MiniAda comes with a test program will print out the parse tree for a given
+input file. After compilation, you can run the test with the command:
+
+   java Test <file>
+
+Where <file> is the input file for the parser. Similarly, you can use the
+command:
+
+   make test
+
+Which will run the parser on all files with the suffix ".adb" in the "test/"
+directory, and print out their parse trees.
+
+To delete the files created by running "make", use the command:
+
+   make clean
+
+REQUIREMENTS
+
+MiniAda requires ANTLR version 3, and the Makefile assumes the command antlr3
+is available to compile ANTLR grammars. The ANTRL jar file must also be in
+Java's classpath. Since MiniAda is written in Java, it also requires a working
+Java SDK.
+
+MiniAda has been tested on Arch Linux, running ANTLR version 3.4 and OpenJDK
+version 1.70.
+
+DIFFERENCES FROM ADA
+
+Although the MiniAda compiler implements a language similar to the Ada95
+programming language, there are some differences. For example, MiniAda uses
+the backtick character (`) instead of the apostrophe (') for variable
+attributes. For example, one must write:
+
+   Integer`range
+
+Instead of:
+
+   Integer'range
+
+MiniAda also requires spaces inside of discrete range literals. For example,
+the following is not currently valid in MiniAda:
+
+   3..5
+
+However, this will work fine:
+
+   3 .. 5
