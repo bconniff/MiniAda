@@ -1,25 +1,11 @@
 grammar MiniAda;
 
-@members {
-   public static void main(String[] args) throws Exception {
-      MiniAdaLexer lex = new MiniAdaLexer(new ANTLRFileStream(args[0]));
-      CommonTokenStream tokens = new CommonTokenStream(lex);
-      MiniAdaParser adaparse = new MiniAdaParser(tokens);
-      
-      try {
-         adaparse.compilation();
-      } catch (RecognitionException e) {
-         e.printStackTrace();
-      }
-   }
-}
-
 //
 // GRAMMAR RULES
 //
 
-compilation: (direc* compilation_unit)+ EOF;
-direc: ('with'|'use') lib_name (',' lib_name)+ ';'
+compilation: direc* compilation_unit+ EOF;
+direc: ('with'|'use') lib_name (',' lib_name)* ';'
      | pragma;
 lib_name: id ('.' id)*;
 pragma: 'pragma' id ('(' pragma_arg (',' pragma_arg)* ')')? ';';
@@ -28,12 +14,18 @@ compilation_unit: pkg_decl | subprogram;
 
 pkg_decl: 'package' (pkg_spec|pkg_body) ';';
 pkg_spec: id 'is' spec_decl* private_part? 'end' id?;
-pkg_body: 'body' id 'is' body_decl* statement_part? exception_part? 'end' id?;
+pkg_body: 'body' id 'is' body_decl* stmt_part? exception_part? 'end' id?;
 
 spec_decl: private_type_decl
-         | decl;
+         | object_decl
+         | type_decl
+         | subtype_decl
+         | pragma
+         | subprogram_decl
+         | 'use' name_list ';'
+         | id_list ':' 'exception' ';';
 
-statement_part: 'begin' statement+;
+stmt_part: 'begin' stmt+;
 
 private_type_decl: 'type' id 'is' 'private' ';';
 private_part: 'private' private_item+;
@@ -50,15 +42,7 @@ body_decl: subprogram
 
 subprogram: subprogram_spec subprogram_body? ';';
 
-subprogram_body: 'is' body_decl* 'begin' statement+ exception_part? 'end' id?;
-
-decl: object_decl
-    | type_decl
-    | subtype_decl
-    | pragma
-    | subprogram_decl
-    | 'use' name_list ';'
-    | id_list ':' 'exception' ';';
+subprogram_body: 'is' body_decl* stmt_part exception_part? 'end' id?;
 
 object_decl: id_list ':' const_option type_or_subtype init_option ';';
 id_list: id (',' id)*;
@@ -113,50 +97,49 @@ discrete_range: id (range_constraint| TICK 'range')?
               | range;
 
 subprogram_decl: subprogram_spec ';';
-subprogram_spec: 'procedure' id formal_part_opt
-               | 'function' designator formal_part_opt;
+subprogram_spec: 'procedure' id formal_part?
+               | 'function' designator formal_part;
 
 designator: id
           | operator_symbol;
 operator_symbol: STR;
 
-formal_part_opt: formal_part? ;
 formal_part: '(' param_decl_list ')';
 param_decl_list: param_decl (';' param_decl)*;
 param_decl: id_list ':' mode? type_or_subtype;
 mode: 'in' 'out'?
     | 'out';
 exception_part: 'exception' exception_handler*;
-exception_handler: 'when' exception_when_suffix;
-exception_when_suffix: 'others' '=>' statement+
-                     | name ('|' name)* '=>' statement+;
-statement: pragma
-         | null_stmt
-         | name assign? ';'
-         | block
-         | loop_stmt
-         | if_stmt
-         | exit_stmt
-         | return_stmt
-         | case_stmt
-         | raise_stmt;
-assign: ':=' expr;
+exception_handler: 'when' exception_when '=>' stmt+;
+exception_when: name ('|' name)* '=>' stmt+
+              | other;
+stmt: pragma
+    | null_stmt
+    | assign_stmt
+    | block
+    | loop_stmt
+    | if_stmt
+    | exit_stmt
+    | return_stmt
+    | case_stmt
+    | raise_stmt;
+assign_stmt: name (':=' expr)? ';';
 null_stmt: 'null' ';';
-block: (id ':')? decl_part 'begin' statement+ exception_part? 'end' id? ';';
+block: (id ':')? decl_part? stmt_part exception_part? 'end' id? ';';
 decl_part: 'declare' body_decl*;
 return_stmt: 'return' expr? ';';
 raise_stmt: 'raise' name ';';
-if_stmt: 'if' expr 'then' statement+ elsif_stmt* else_part? 'end' 'if' ';';
-elsif_stmt: 'elsif' expr 'then' statement+;
-else_part: 'else' statement+;
-loop_stmt: (id ':')? it_clause basic_loop ';';
-basic_loop: 'loop' statement+ 'end' 'loop';
+if_stmt: if_part elsif_part* else_part? 'end' 'if' ';';
+if_part: 'if' expr 'then' stmt+;
+elsif_part: 'elsif' expr 'then' stmt+;
+else_part: 'else' stmt+;
+loop_stmt: (id ':')? it_clause? 'loop' stmt+ 'end' 'loop' ';';
 it_clause: 'while' expr
          | 'for' id 'in' 'reverse'? discrete_range;
 exit_stmt: 'exit' name? ('when' expr)? ';';
 case_stmt: 'case' expr 'is' ('when' when)* ('when' other) 'end' 'case' ';';
-when: choice ('|' choice)* '=>' statement+;
-other: 'others' '=>' statement+;
+when: choice ('|' choice)* '=>' stmt+;
+other: 'others' '=>' stmt+;
 choice: expr ('..' expr)?;
 
 log_op: 'and'
