@@ -43,19 +43,8 @@ version 1.70.
 
 DIFFERENCES FROM ADA
 
-Although the MiniAda compiler implements a language similar to the Ada95
-programming language, there are some differences. For example, MiniAda uses
-the backtick character (`) instead of the apostrophe (') for variable
-attributes. For example, one must write:
-
-   Integer`range
-
-Instead of:
-
-   Integer'range
-
-MiniAda also requires spaces inside of discrete range literals. For example,
-the following is not currently valid in MiniAda:
+MiniAda requires spaces inside of discrete range literals. For example, the
+following is not currently valid in MiniAda:
 
    3..5
 

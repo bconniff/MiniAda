@@ -204,8 +204,8 @@ name_list: name (',' name)*;
 // LEXER RULES
 //
 
-TICK: '`';
-CHAR: '\'' . '\'';
+TICK: {input.LA(3) != '\''}?=> '\'';
+CHAR: {input.LA(3) == '\''}?=> '\'' . '\'';
 STR: '"' ~('"' | EOL)* '"';
 NAME: ALPHA ('_'? (ALPHA|DIGIT))*;
 INT: INT_NUM EXP?;
