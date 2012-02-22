@@ -10,12 +10,21 @@ of Radford University.
 
 COMPILATION
 
+The source comes with a Makefile which will help build the parser for you. You
+should look in the Makefile and set the path to your ANTLR jar file. If you're
+compiling this on Windows, you should also set the WINDOWS option in the
+Makefile to YES.
+
 To compile the parser on a UNIX-like system, use the command:
 
    make
 
 MiniAda comes with a test program will print out the parse tree for a given
-input file. After compilation, you can run the test with the command:
+input file. To build the test program use:
+
+   make debug
+
+After compilation, you can run the test with the command:
 
    java Test <file>
 
