@@ -62,7 +62,7 @@ type_def: record_type_def
 incomplete_type_decl: 'type' id ';';
 
 record_type_def: 'record' component_list 'end' 'record';
-component_list: component_decl component_decl* variant_part
+component_list: component_decl component_decl* variant_part?
               | 'null' ';';
 component_decl: id_list ':' type_or_subtype init_option ';';
 variant_part: 'case' id ':' id 'is' variant+ 'end' 'case' ';';
@@ -204,8 +204,8 @@ name_list: name (',' name)*;
 // LEXER RULES
 //
 
-TICK: {input.LA(3) != '\''}?=> '\'';
-CHAR: {input.LA(3) == '\''}?=> '\'' . '\'';
+TICK: {input.LA(3) != '\'' || input.LA(5) == '\''}?=> '\'';
+CHAR: {input.LA(3) == '\'' && input.LA(5) != '\''}?=> '\'' . '\'';
 STR: '"' ~('"' | EOL)* '"';
 NAME: ALPHA ('_'? (ALPHA|DIGIT))*;
 INT: INT_NUM EXP?;
@@ -216,7 +216,7 @@ BASE_INT: INT_NUM '#' HEX_NUM '#' EXP?;
 BASE_FLOAT: INT_NUM '#' HEX_NUM '.' HEX_NUM '#' EXP?;
 
 // these get ignored
-COMMENT: '-' '-' (options{greedy=false;}:.)* EOL {skip();};
+COMMENT: '--' (options{greedy=false;}:.)* EOL {skip();};
 SPACE: (' '|'\t'|'\n'|'\r')+ {skip();};
 
 // used in the definition of tokens, but not valid alone

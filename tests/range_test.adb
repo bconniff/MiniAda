@@ -1,4 +1,4 @@
-procedure Main is
+procedure Range_Test is
    -- lexer must disambiguate from range
    a: Float := 3.9;
 begin
@@ -11,4 +11,4 @@ begin
    for x in 3 .. 9 loop
       null;
    end loop;
-end Main;
+end Range_Test;
