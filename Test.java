@@ -14,7 +14,7 @@ public class Test {
    }
 
    public static void main(String[] args) throws Exception {
-      if (args.length != 1) {
+      if (args.length < 1) {
          System.err.println("Usage: java Test <file> ...");
          return;
       }
