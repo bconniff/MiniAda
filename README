@@ -43,11 +43,5 @@ version 1.70.
 
 DIFFERENCES FROM ADA
 
-MiniAda requires spaces inside of discrete range literals. For example, the
-following is not currently valid in MiniAda:
-
-   3..5
-
-However, this will work fine:
-
-   3 .. 5
+The language implemented by the MiniAda compiler is similar to Ada95, but not
+identical. In the future, this section will list the specific differences.

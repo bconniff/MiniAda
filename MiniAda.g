@@ -90,7 +90,7 @@ subtype_def: id (range_constraint | index_constraint)
 
 range_constraint: 'range' range
                 | 'range' '<>';
-range: simple_expr '..' simple_expr;
+range: simple_expr DOTDOT simple_expr;
 index_constraint: '(' discrete_range (',' discrete_range)* ')';
 
 discrete_range: id (range_constraint| TICK 'range')?
@@ -140,7 +140,7 @@ exit_stmt: 'exit' name? ('when' expr)? ';';
 case_stmt: 'case' expr 'is' ('when' when)* ('when' other) 'end' 'case' ';';
 when: choice ('|' choice)* '=>' stmt+;
 other: 'others' '=>' stmt+;
-choice: expr ('..' expr)?;
+choice: expr (DOTDOT expr)?;
 
 log_op: 'and'
       | 'or';
@@ -209,7 +209,9 @@ CHAR: {input.LA(3) == '\''}?=> '\'' . '\'';
 STR: '"' ~('"' | EOL)* '"';
 NAME: ALPHA ('_'? (ALPHA|DIGIT))*;
 INT: INT_NUM EXP?;
-FLOAT: INT_NUM '.' INT_NUM EXP?;
+DOTDOT: '..';
+FLOAT: (INT_NUM '.' INT_NUM EXP?)=> INT_NUM '.' INT_NUM EXP? {$type=FLOAT;}
+     | INT_NUM {$type=INT;};
 BASE_INT: INT_NUM '#' HEX_NUM '#' EXP?;
 BASE_FLOAT: INT_NUM '#' HEX_NUM '.' HEX_NUM '#' EXP?;
 
