@@ -21,6 +21,7 @@ endif
 
 all: MiniAdaParser.class
 debug: Test.class
+clean: clean-main clean-trees
 
 test: Test.class
 	java $(JARGS) Test tests/*.adb
@@ -40,5 +41,8 @@ MiniAdaParser.java: MiniAda.g
 MiniAdaParser.class: MiniAdaParser.java
 	javac $(JARGS) MiniAdaParser.java
 
-clean:
+clean-main:
 	rm -f *.class MiniAdaLexer.java MiniAdaParser.java MiniAda.tokens
+
+clean-trees:
+	rm -f trees/*.class
