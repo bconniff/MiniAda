@@ -5,19 +5,9 @@
 # change this to path to your ANTLR version 3 jar file
 ANTLR=/usr/share/java/antlrworks.jar
 
-# set this to YES if you're using windows
-WINDOWS=NO
-
 ####
 # RULES
 ####
-
-# windows uses a semicolon instead of a colon in classpath
-ifeq "$(WINDOWS)" "YES"
-JARGS=-cp "$(ANTLR);."
-else
-JARGS=-cp "$(ANTLR):."
-endif
 
 all: MiniAdaParser.class
 debug: Test.class

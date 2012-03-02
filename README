@@ -11,9 +11,7 @@ of Radford University.
 COMPILATION
 
 The source comes with a Makefile which will help build the parser for you. You
-should look in the Makefile and set the path to your ANTLR jar file. If you're
-compiling this on Windows, you should also set the WINDOWS option in the
-Makefile to YES.
+should look in the Makefile and set the path to your ANTLR jar file.
 
 To compile the parser on a UNIX-like system, use the command:
 
@@ -39,6 +37,9 @@ directory, and print out their parse trees.
 To delete the files created by running "make", use the command:
 
    make clean
+
+It appears that this project does not currently compile on Microsoft Windows
+systems. We are in the process of fixing this.
 
 REQUIREMENTS
 
