@@ -1,6 +1,6 @@
 package trees;
 
-public class FloatValNode implements ExprNode {
+public class FloatValNode implements ValNode {
    public FloatValNode(String s) {
       // code
    }

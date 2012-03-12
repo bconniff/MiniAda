@@ -9,6 +9,8 @@ ANTLR=/usr/share/java/antlrworks.jar
 # RULES
 ####
 
+JARGS=-cp ".:$(ANTLR)"
+
 all: MiniAdaParser.class
 debug: Test.class
 clean: clean-main clean-trees

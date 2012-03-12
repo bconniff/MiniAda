@@ -1,3 +1,5 @@
 package trees;
 
-public interface ExprNode { }
+public interface ExprNode {
+   // code
+}
