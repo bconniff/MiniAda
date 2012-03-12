@@ -8,7 +8,7 @@ MiniAda is developed by two students at Radford University, bconniff
 (github.com/bconniff) and jdominic (github.com/jdominic). All code is property
 of Radford University.
 
-COMPILATION
+COMPILATION (LINUX/UNIX)
 
 The source comes with a Makefile which will help build the parser for you. You
 should look in the Makefile and set the path to your ANTLR jar file.
@@ -38,8 +38,14 @@ To delete the files created by running "make", use the command:
 
    make clean
 
-It appears that this project does not currently compile on Microsoft Windows
-systems. We are in the process of fixing this.
+COMPILATION (WINDOWS)
+
+The Makefile doesn't work on Windows, so we've also provided a build.xml file
+for use with Apache's Ant build system. First, edit the build.xml file and set
+the "antlr.jar" property to point to your ANTLR jar file.
+
+The Ant build.xml provides all the options listed in the above section, which
+work as expected. Just replace the "make" command with "ant".
 
 REQUIREMENTS
 

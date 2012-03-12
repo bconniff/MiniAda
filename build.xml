@@ -1,0 +1,75 @@
+<project name="MiniAda" default="compile" basedir=".">
+   <description>
+      build file for MiniAda
+   </description>
+
+   <!-- set this to the path to your ANTLR version 3 jar file -->
+   <property name="antlr.jar" location="/usr/share/java/antlrworks.jar"/>
+
+   <target name="antlr">
+      <java classname="org.antlr.Tool">
+         <classpath>
+            <pathelement path="${classpath}"/>
+            <pathelement location="${antlr.jar}"/>
+         </classpath>
+         <arg value="-verbose"/>
+         <arg value="MiniAda.g"/>
+      </java>
+   </target>
+
+   <target name="compile" depends="antlr">
+      <javac srcdir="." includeantruntime="false" listfiles="true">
+         <classpath>
+            <pathelement path="${classpath}"/>
+            <pathelement location="${antlr.jar}"/>
+         </classpath>
+         <include name="MiniAdaParser.java"/>
+      </javac>
+   </target>
+
+   <target name="antlr-debug">
+      <java classname="org.antlr.Tool">
+         <classpath>
+            <pathelement path="${classpath}"/>
+            <pathelement location="${antlr.jar}"/>
+         </classpath>
+         <arg value="-verbose"/>
+         <arg value="-debug"/>
+         <arg value="MiniAda.g"/>
+      </java>
+   </target>
+
+   <target name="compile-debug" depends="antlr-debug">
+      <javac srcdir="." includeantruntime="false" listfiles="true">
+         <classpath>
+            <pathelement path="${classpath}"/>
+            <pathelement location="${antlr.jar}"/>
+         </classpath>
+         <include name="MiniAdaParser.java"/>
+         <include name="Test.java"/>
+      </javac>
+   </target>
+
+   <target name="test" depends="compile-debug">
+      <java classname="Test">
+         <classpath>
+            <pathelement path="${classpath}"/>
+            <pathelement location="."/>
+            <pathelement location="${antlr.jar}"/>
+         </classpath>
+         <arg path="tests/proc_test.adb"/>
+         <arg path="tests/range_test.adb"/>
+         <arg path="tests/tick_test.adb"/>
+      </java>
+   </target>
+
+   <target name="clean">
+      <delete verbose="true">
+         <fileset file="*.class"/>
+         <fileset file="trees/*.class"/>
+         <fileset file="MiniAda.tokens"/>
+         <fileset file="MiniAdaLexer.java"/>
+         <fileset file="MiniAdaParser.java"/>
+      </delete>
+   </target>
+</project>
