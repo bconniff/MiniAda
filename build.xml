@@ -4,7 +4,7 @@
    </description>
 
    <!-- set this to the path to your ANTLR version 3 jar file -->
-   <property name="antlr.jar" location="/usr/share/java/antlrworks.jar"/>
+   <property name="antlr.jar" location="antlrworks.jar"/>
 
    <target name="antlr">
       <java classname="org.antlr.Tool">

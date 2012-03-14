@@ -1,0 +1,5 @@
+*.class
+antlrworks.jar
+MiniAda.tokens
+MiniAdaLexer.*
+MiniAdaParser.*
