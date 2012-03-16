@@ -17,19 +17,21 @@ To compile the parser on a UNIX-like system, use the command:
 
    make
 
-MiniAda comes with a test program will print out the parse tree for a given
-input file. To build the test program use:
+MiniAda comes with test programs to print out the parse tree and AST for a
+given input file. To build the test programs use:
 
    make debug
 
-After compilation, you can run the test with the command:
+After compilation, you can run the tests with:
 
    java Test <file>
+   java TestAST <file>
 
 Where <file> is the input file for the parser. Similarly, you can use the
-command:
+commands:
 
    make test
+   make test-ast
 
 Which will run the parser on all files with the suffix ".adb" in the "test/"
 directory, and print out their parse trees.

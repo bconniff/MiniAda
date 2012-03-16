@@ -47,7 +47,21 @@
          </classpath>
          <include name="MiniAdaParser.java"/>
          <include name="Test.java"/>
+         <include name="TestAST.java"/>
       </javac>
+   </target>
+
+   <target name="test-ast" depends="compile-debug">
+      <java classname="TestAST">
+         <classpath>
+            <pathelement path="${classpath}"/>
+            <pathelement location="."/>
+            <pathelement location="${antlr.jar}"/>
+         </classpath>
+         <arg path="tests/proc_test.adb"/>
+         <arg path="tests/range_test.adb"/>
+         <arg path="tests/tick_test.adb"/>
+      </java>
    </target>
 
    <target name="test" depends="compile-debug">

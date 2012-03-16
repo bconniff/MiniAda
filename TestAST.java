@@ -1,5 +1,6 @@
 import org.antlr.runtime.*;
 import org.antlr.runtime.tree.Tree;
+import org.antlr.runtime.debug.ParseTreeBuilder;
 
 public class TestAST {
    public static void main(String[] args) throws Exception {
@@ -11,7 +12,8 @@ public class TestAST {
       for (int i = 0; i < args.length; i++) {
          MiniAdaLexer lex = new MiniAdaLexer(new MiniAdaFileStream(args[i]));
          CommonTokenStream tokens = new CommonTokenStream(lex);
-         MiniAdaParser parse = new MiniAdaParser(tokens);
+         ParseTreeBuilder builder = new ParseTreeBuilder("compilation");
+         MiniAdaParser parse = new MiniAdaParser(tokens, builder);
          
          try {
             System.out.println(parse.compilation());
