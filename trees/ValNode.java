@@ -1,5 +1,3 @@
 package trees;
 
-public interface ValNode extends ExprNode {
-   // code
-}
+public interface ValNode extends ExprNode { }

@@ -1,8 +1,20 @@
 package trees;
 
-public class IfStmtNode implements StmtNode {
-   public IfStmtNode(IfClauseNode i) {}
+import java.util.List;
+import java.util.ArrayList;
 
-   public void addElsif(IfClauseNode i) {}
-   public void addElse(IfClauseNode i) {}
+public class IfStmtNode extends AbstractTreeNode implements StmtNode {
+   private final List<IfClauseNode> clauses = new ArrayList<IfClauseNode>();
+
+   public IfStmtNode(IfClauseNode i) {
+      clauses.add(i);
+   }
+
+   public void addElsif(IfClauseNode i) {
+      clauses.add(i);
+   }
+
+   public void addElse(IfClauseNode i) {
+      clauses.add(i);
+   }
 }

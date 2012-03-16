@@ -1,11 +1,15 @@
 package trees;
 
-public class UnaryNode implements ExprNode {
+public class UnaryNode extends AbstractTreeNode implements ExprNode {
+   private final Op unOp;
+   private final ExprNode expr;
+
    public static enum Op {
       PLUS, MINUS, NOT, ABS;
    }
 
    public UnaryNode(Op u, ExprNode e) {
-      // code
+      unOp = u;
+      expr = e;
    }
 }

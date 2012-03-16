@@ -1,5 +1,9 @@
 package trees;
 
-public class WhileClauseNode implements LoopClauseNode {
-   public WhileClauseNode(ExprNode expr) {}
+public class WhileClauseNode extends AbstractTreeNode implements LoopClauseNode {
+   private final ExprNode expr;
+
+   public WhileClauseNode(ExprNode expr) {
+      this.expr = expr;
+   }
 }

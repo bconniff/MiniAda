@@ -1,5 +1,5 @@
 package trees;
 
-public class IndexConstraintNode {
+public class IndexConstraintNode extends AbstractTreeNode {
    public IndexConstraintNode() {}
 }

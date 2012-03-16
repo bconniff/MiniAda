@@ -1,5 +1,9 @@
 package trees;
 
-public class IncompleteTypeNode implements TypeNode {
-   public IncompleteTypeNode(String name) {}
+public class IncompleteTypeNode extends AbstractTreeNode implements TypeNode {
+   private final String name;
+
+   public IncompleteTypeNode(String name) {
+      this.name = name;
+   }
 }

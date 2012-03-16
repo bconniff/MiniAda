@@ -1,5 +1,5 @@
 package trees;
 
-public class AllSuffixNode implements SuffixNode {
+public class AllSuffixNode extends AbstractTreeNode implements SuffixNode {
    public AllSuffixNode() {}
 }

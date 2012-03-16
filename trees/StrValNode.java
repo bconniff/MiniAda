@@ -1,7 +1,9 @@
 package trees;
 
-public class StrValNode implements ValNode {
+public class StrValNode extends AbstractTreeNode implements ValNode {
+   private final String s;
+
    public StrValNode(String s) {
-      // code
+      this.s = s;
    }
 }

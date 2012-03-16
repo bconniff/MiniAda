@@ -1,5 +1,9 @@
 package trees;
 
-public class DotSuffixNode implements SuffixNode {
-   public DotSuffixNode(String suff) {}
+public class DotSuffixNode extends AbstractTreeNode implements SuffixNode {
+   private final String suff;
+
+   public DotSuffixNode(String suff) {
+      this.suff = suff;
+   }
 }

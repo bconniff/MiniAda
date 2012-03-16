@@ -1,6 +1,13 @@
 package trees;
 
-public class RangeConstraintNode {
-   public RangeConstraintNode() {}
-   public RangeConstraintNode(RangeNode range) {}
+public class RangeConstraintNode extends AbstractTreeNode {
+   private final RangeNode range;
+
+   public RangeConstraintNode() {
+      this.range = null;
+   }
+
+   public RangeConstraintNode(RangeNode range) {
+      this.range = range;
+   }
 }

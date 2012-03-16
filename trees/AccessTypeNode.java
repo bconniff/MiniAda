@@ -2,9 +2,20 @@ package trees;
 
 import java.util.List;
 
-public class AccessTypeNode implements TypeNode {
-   public AccessTypeNode(String name) {}
+public class AccessTypeNode extends AbstractTreeNode implements TypeNode {
+   private final String name;
+   private RangeConstraintNode con;
+   private List<RangeNode> ranges;
 
-   public void setConstraint(RangeConstraintNode range) {}
-   public void setConstraint(List<RangeNode> range) {}
+   public AccessTypeNode(String name) {
+      this.name = name;
+   }
+
+   public void setConstraint(RangeConstraintNode range) {
+      con = range;
+   }
+
+   public void setConstraint(List<RangeNode> range) {
+      ranges = range;
+   }
 }
