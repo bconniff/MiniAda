@@ -1,5 +1,6 @@
 package trees;
 
+import visitors.Visitor;
 public class ComponentChoiceNode extends AbstractTreeNode {
    public final ExprNode expr;
    public final RangeNode range;

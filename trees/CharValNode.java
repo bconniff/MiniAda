@@ -1,5 +1,6 @@
 package trees;
 
+import visitors.Visitor;
 public class CharValNode extends AbstractTreeNode implements ValNode {
    public final String s;
 

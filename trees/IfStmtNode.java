@@ -1,7 +1,7 @@
 package trees;
 
+import visitors.Visitor;
 import java.util.List;
-import java.util.ArrayList;
 
 public class IfStmtNode extends AbstractTreeNode implements StmtNode {
    public final List<IfClauseNode> clauses;

@@ -1,5 +1,6 @@
 package trees;
 
+import visitors.Visitor;
 public class PrivateItemNode extends AbstractTreeNode {
    public final String name;
    public final TypeNode type;

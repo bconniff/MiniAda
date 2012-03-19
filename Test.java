@@ -27,7 +27,9 @@ public class Test {
          
          try {
             parse.compilation();
+            if (i > 0) System.out.println();
             System.out.println("Parse tree: " + args[i]);
+            System.out.println("-----------------------------------------");
             printTree(builder.getTree(), 2, 2);
          } catch (RecognitionException e) {
             e.printStackTrace();

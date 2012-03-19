@@ -13,7 +13,12 @@ JARGS=-cp ".:$(ANTLR)"
 
 all: MiniAdaParser.class
 debug: Test.class TestAST.class
-clean: clean-main clean-trees
+
+clean:
+	rm -f MiniAdaLexer.java MiniAdaParser.java MiniAda.tokens
+	rm -f *.class
+	rm -f trees/*.class
+	rm -f visitors/*.class
 
 test: Test.class
 	java $(JARGS) Test tests/*.adb
@@ -38,9 +43,3 @@ MiniAdaParser.java: MiniAda.g
 
 MiniAdaParser.class: MiniAdaParser.java
 	javac $(JARGS) MiniAdaParser.java
-
-clean-main:
-	rm -f *.class MiniAdaLexer.java MiniAdaParser.java MiniAda.tokens
-
-clean-trees:
-	rm -f trees/*.class

@@ -1,7 +1,7 @@
 package trees;
 
+import visitors.Visitor;
 import java.util.List;
-import java.util.ArrayList;
 
 public class IfClauseNode extends AbstractTreeNode {
    public final ExprNode expr;

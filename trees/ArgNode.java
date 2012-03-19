@@ -1,5 +1,6 @@
 package trees;
 
+import visitors.Visitor;
 public class ArgNode extends AbstractTreeNode {
    public final String name;
    public final ExprNode expr;

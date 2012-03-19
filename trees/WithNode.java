@@ -1,7 +1,7 @@
 package trees;
 
+import visitors.Visitor;
 import java.util.List;
-import java.util.ArrayList;
 
 public class WithNode extends AbstractTreeNode implements DirecNode {
    public final List<NameNode> libs;

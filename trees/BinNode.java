@@ -1,5 +1,6 @@
 package trees;
 
+import visitors.Visitor;
 public class BinNode extends AbstractTreeNode implements ExprNode{
    public final Op binOp;
    public final ExprNode r;

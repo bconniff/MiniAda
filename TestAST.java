@@ -10,14 +10,16 @@ public class TestAST {
       }
 
       for (int i = 0; i < args.length; i++) {
+         if (i > 0) System.out.println();
          System.out.println("Abstract syntax tree: "+args[i]);
+         System.out.println("-----------------------------------------");
          MiniAdaLexer lex = new MiniAdaLexer(new MiniAdaFileStream(args[i]));
          CommonTokenStream tokens = new CommonTokenStream(lex);
          ParseTreeBuilder builder = new ParseTreeBuilder("compilation");
          MiniAdaParser parse = new MiniAdaParser(tokens, builder);
          
          try {
-            System.out.println("  "+parse.compilation());
+            System.out.println(parse.compilation());
          } catch (RecognitionException e) {
             e.printStackTrace();
             return;

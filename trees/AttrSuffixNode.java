@@ -1,5 +1,6 @@
 package trees;
 
+import visitors.Visitor;
 public class AttrSuffixNode extends AbstractTreeNode implements SuffixNode {
    public final String suff;
 

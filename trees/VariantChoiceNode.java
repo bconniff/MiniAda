@@ -1,5 +1,6 @@
 package trees;
 
+import visitors.Visitor;
 public class VariantChoiceNode extends AbstractTreeNode {
    public final ExprNode expr;
    public final RecordComponentListNode comps;

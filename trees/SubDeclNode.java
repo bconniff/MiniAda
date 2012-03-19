@@ -1,7 +1,7 @@
 package trees;
 
+import visitors.Visitor;
 import java.util.List;
-import java.util.ArrayList;
 
 public class SubDeclNode extends AbstractTreeNode implements DeclNode,CompilationNode {
    public final SubSpecNode spec;

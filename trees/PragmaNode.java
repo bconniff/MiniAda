@@ -1,7 +1,7 @@
 package trees;
 
+import visitors.Visitor;
 import java.util.List;
-import java.util.ArrayList;
 
 public class PragmaNode extends AbstractTreeNode implements DirecNode,StmtNode,DeclNode {
    public final String name;

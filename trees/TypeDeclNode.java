@@ -1,5 +1,6 @@
 package trees;
 
+import visitors.Visitor;
 public class TypeDeclNode extends AbstractTreeNode implements DeclNode {
    public final String name;
    public final TypeNode type;

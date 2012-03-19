@@ -81,6 +81,7 @@
       <delete verbose="true">
          <fileset file="*.class"/>
          <fileset file="trees/*.class"/>
+         <fileset file="visitors/*.class"/>
          <fileset file="MiniAda.tokens"/>
          <fileset file="MiniAdaLexer.java"/>
          <fileset file="MiniAdaParser.java"/>

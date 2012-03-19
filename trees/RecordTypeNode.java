@@ -1,5 +1,6 @@
 package trees;
 
+import visitors.Visitor;
 public class RecordTypeNode extends AbstractTreeNode implements TypeNode {
    public final RecordComponentListNode comps;
 

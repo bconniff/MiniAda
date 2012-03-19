@@ -1,5 +1,6 @@
 package trees;
 
+import visitors.Visitor;
 public class IdTypeNode extends AbstractTreeNode implements TypeNode {
    public final String name;
 

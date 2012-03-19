@@ -1,5 +1,6 @@
 package trees;
 
+import visitors.Visitor;
 import java.util.List;
 
 public class ProcNode extends AbstractTreeNode implements SubSpecNode {

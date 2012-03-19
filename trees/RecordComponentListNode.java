@@ -1,7 +1,7 @@
 package trees;
 
+import visitors.Visitor;
 import java.util.List;
-import java.util.ArrayList;
 
 public class RecordComponentListNode extends AbstractTreeNode {
    public final List<RecordComponentNode> comps;
