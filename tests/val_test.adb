@@ -15,7 +15,7 @@ procedure Val_Test is
 
    x: Character := ''';
    y: Character := 'a';
-   z: String := "hello!";
+   z: String := """hel""lo!";
 begin
    null;
 end Val_Test;

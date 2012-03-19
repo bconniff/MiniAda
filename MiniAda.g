@@ -418,7 +418,7 @@ name_list returns [List<NameNode> names]
 TICK: {input.LA(3) != '\'' || input.LA(5) == '\''}?=> '\'';
 CHAR: {input.LA(3) == '\'' && input.LA(5) != '\''}?=> '\'' . '\'';
 BOOL: 'true' | 'false';
-STR: '"' ~('"' | EOL)* '"';
+STR: '"' ('""' | ~('"' | EOL))* '"';
 NAME: ALPHA ('_'? (ALPHA|DIGIT))*;
 INT: INT_NUM INT_EXP?;
 DOTDOT: '..';
