@@ -1,8 +1,8 @@
 package trees;
 
 public class UnaryNode extends AbstractTreeNode implements ExprNode {
-   private final Op unOp;
-   private final ExprNode expr;
+   public final Op unOp;
+   public final ExprNode expr;
 
    public static enum Op {
       PLUS, MINUS, NOT, ABS;
@@ -12,4 +12,6 @@ public class UnaryNode extends AbstractTreeNode implements ExprNode {
       unOp = u;
       expr = e;
    }
+
+   public void accept(Visitor v) { v.visit(this); }
 }

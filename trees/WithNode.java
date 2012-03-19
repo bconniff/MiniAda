@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class WithNode extends AbstractTreeNode implements DirecNode {
-   private final List<List<String>> libs = new ArrayList<List<String>>();
+   public final List<NameNode> libs;
 
-   public WithNode() {}
-
-   public void addLib(List<String> lib) {
-      libs.add(lib);
+   public WithNode(List<NameNode> l) {
+      libs = l;
    }
+
+   public void accept(Visitor v) { v.visit(this); }
 }

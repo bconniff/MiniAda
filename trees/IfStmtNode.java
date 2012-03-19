@@ -4,17 +4,11 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class IfStmtNode extends AbstractTreeNode implements StmtNode {
-   private final List<IfClauseNode> clauses = new ArrayList<IfClauseNode>();
+   public final List<IfClauseNode> clauses;
 
-   public IfStmtNode(IfClauseNode i) {
-      clauses.add(i);
+   public IfStmtNode(List<IfClauseNode> i) {
+      clauses = i;
    }
 
-   public void addElsif(IfClauseNode i) {
-      clauses.add(i);
-   }
-
-   public void addElse(IfClauseNode i) {
-      clauses.add(i);
-   }
+   public void accept(Visitor v) { v.visit(this); }
 }

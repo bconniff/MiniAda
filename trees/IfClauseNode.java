@@ -4,16 +4,17 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class IfClauseNode extends AbstractTreeNode {
-   private ExprNode expr;
-   private List<StmtNode> stmts = new ArrayList<StmtNode>();
+   public final ExprNode expr;
+   public final List<StmtNode> stmts;
 
-   public IfClauseNode() {}
-
-   public void setExpr(ExprNode expr) {
-      this.expr = expr;
+   public IfClauseNode(ExprNode e, List<StmtNode> s) {
+      expr = e;
+      stmts = s;
    }
 
-   public void addStmt(StmtNode stmt) {
-      stmts.add(stmt);
+   public IfClauseNode(List<StmtNode> s) {
+      this(new BoolValNode(true), s);
    }
+
+   public void accept(Visitor v) { v.visit(this); }
 }

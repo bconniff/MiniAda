@@ -1,9 +1,11 @@
 package trees;
 
 public class IntValNode extends AbstractTreeNode implements ValNode {
-   private final String s;
+   public final String s;
 
    public IntValNode(String s) { 
       this.s = s;
    }
+
+   public void accept(Visitor v) { v.visit(this); }
 }

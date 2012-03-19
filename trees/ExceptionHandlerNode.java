@@ -4,14 +4,13 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class ExceptionHandlerNode extends AbstractTreeNode {
-   private final WhenNode expr;
-   private final List<StmtNode> stmts = new ArrayList<StmtNode>();
+   public final WhenNode expr;
+   public final List<StmtNode> stmts;
 
-   public ExceptionHandlerNode(WhenNode expr) {
-      this.expr = expr;
+   public ExceptionHandlerNode(WhenNode e, List<StmtNode> s) {
+      expr = e;
+      stmts = s;
    }
 
-   public void addStmt(StmtNode stmt) {
-      stmts.add(stmt);
-   }
+   public void accept(Visitor v) { v.visit(this); }
 }

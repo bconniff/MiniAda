@@ -4,20 +4,17 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class SubDeclNode extends AbstractTreeNode implements DeclNode,CompilationNode {
-   private final SubSpecNode spec;
-   private final List<DeclNode> decls = new ArrayList<DeclNode>();
-   private SubBodyNode body;
+   public final SubSpecNode spec;
+   public final SubBodyNode body;
 
-
-   public SubDeclNode(SubSpecNode spec) {
-      this.spec = spec;
+   public SubDeclNode(SubSpecNode s, SubBodyNode b) {
+      spec = s;
+      body = b;
    }
 
-   public void addDecl(DeclNode decl) {
-      decls.add(decl);
+   public SubDeclNode(SubSpecNode s)  {
+      this(s, null);
    }
 
-   public void setBody(SubBodyNode body) {
-      this.body = body;
-   }
+   public void accept(Visitor v) { v.visit(this); }
 }

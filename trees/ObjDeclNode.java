@@ -3,23 +3,21 @@ package trees;
 import java.util.List;
 
 public class ObjDeclNode extends AbstractTreeNode implements DeclNode {
-   private boolean con = false;
-   private List<String> names;
-   private TypeNode type;
-   private ExprNode init;
+   public final boolean con;
+   public final List<String> names;
+   public final TypeNode type;
+   public final ExprNode init;
 
-   public ObjDeclNode() {}
-
-   public void setConst(boolean con) {
-      this.con = con;
+   public ObjDeclNode(boolean c, List<String> n, TypeNode t, ExprNode i) {
+      con = c;
+      names = n;
+      type = t;
+      init = i;
    }
 
-   public void setDecl(List<String> names, TypeNode type) {
-      this.names = names;
-      this.type = type;
+   public ObjDeclNode(boolean c, List<String> n, TypeNode t) {
+      this(c, n, t, null);
    }
 
-   public void setInit(ExprNode expr) {
-      init = expr;
-   }
+   public void accept(Visitor v) { v.visit(this); }
 }

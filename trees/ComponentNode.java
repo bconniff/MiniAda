@@ -3,34 +3,17 @@ package trees;
 import java.util.List;
 
 public class ComponentNode extends AbstractTreeNode {
-   private final List<ComponentChoiceNode> choices;
-   private final List<String> names;
-   private final TypeNode type;
-   private final ExprNode expr;
-   private ExprNode init;
+   public final List<ComponentChoiceNode> choices;
+   public final ExprNode expr;
 
-   public ComponentNode(ExprNode expr) {
-      choices = null;
-      names = null;
-      type = null;
-      this.expr = expr;
+   public ComponentNode(ExprNode e) {
+      this(null, e);
    }
 
-   public ComponentNode(List<ComponentChoiceNode> choices, ExprNode expr) {
-      names = null;
-      type = null;
-      this.choices = choices;
-      this.expr = expr;
+   public ComponentNode(List<ComponentChoiceNode> c, ExprNode e) {
+      choices = c;
+      expr = e;
    }
 
-   public ComponentNode(List<String> names, TypeNode type) {
-      choices = null;
-      expr = null;
-      this.names = names;
-      this.type = type;
-   }
-
-   public void setInit(ExprNode expr) {
-      this.init = expr;
-   }
+   public void accept(Visitor v) { v.visit(this); }
 }

@@ -4,14 +4,13 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class CaseStmtNode extends AbstractTreeNode implements StmtNode {
-   private final ExprNode expr;
-   private final List<WhenNode> whens = new ArrayList<WhenNode>();
+   public final ExprNode expr;
+   public final List<WhenNode> whens;
 
-   public CaseStmtNode(ExprNode expr) {
-      this.expr = expr;
+   public CaseStmtNode(ExprNode e, List<WhenNode> w) {
+      expr = e;
+      whens = w;
    }
 
-   public void addWhen(WhenNode when) {
-      whens.add(when);
-   }
+   public void accept(Visitor v) { v.visit(this); }
 }

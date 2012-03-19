@@ -11,31 +11,62 @@ grammar MiniAda;
 //
 
 compilation returns [MiniAdaTree tree]
-@init {tree=new MiniAdaTree();}
-   : (d=direc {tree.addDirec($d.value);})* (c=compilation_unit {tree.addUnit($c.value);})+ EOF;
+   : d=direc_list c=compilation_unit_list EOF {tree=new MiniAdaTree($d.value, $c.value);};
+
+direc_list returns [List<DirecNode> value]
+@init {value=new ArrayList<DirecNode>();}
+   : (d=direc {value.add($d.value);})*;
+compilation_unit_list returns [List<CompilationNode> value]
+@init {value=new ArrayList<CompilationNode>();}
+   : (c=compilation_unit {value.add($c.value);})+;
+
+lib_suffix_list returns [List<SuffixNode> suffs]
+@init {suffs=new ArrayList<SuffixNode>();}
+   : ('.' i=id {suffs.add(new DotSuffixNode($i.text));})+;
+
+lib_name returns [NameNode value]
+   : i=id s=lib_suffix_list {value=new NameNode($i.text, $s.suffs);}
+   | i=id {value=new NameNode($i.text);};
+lib_list returns [List<NameNode> value]
+@init {value=new ArrayList<NameNode>();}
+   : l=lib_name {value.add($l.value);} (',' l=lib_name {value.add($l.value);})*;
 
 direc returns [DirecNode value]
-   : 'with' {WithNode v=new WithNode();} l=lib_name {v.addLib($l.value);} (',' l=lib_name {v.addLib($l.value);})* ';' {value=v;}
-   | 'use' {UseNode v=new UseNode();} l=lib_name {v.addLib($l.value);} (',' l=lib_name {v.addLib($l.value);})* ';' {value=v;}
+   : 'with' l=lib_list ';' {value=new WithNode($l.value);}
+   | 'use' l=lib_list ';' {value=new UseNode($l.value);}
    | p=pragma {value=$p.value;};
 pragma returns [PragmaNode value]
-   : 'pragma' i=id {value=new PragmaNode($i.text);} ('(' p=pragma_arg {value.addArg($p.value);} (',' p=pragma_arg {value.addArg($p.value);})* ')')? ';';
-pragma_arg returns [PragmaArgNode value]
-   : i=id '=>' e=expr {value=new PragmaArgNode($i.text,$e.value);}
-   | e=expr {value=new PragmaArgNode($e.value);};
-
-lib_name returns [List<String> value]
-@init {value = new ArrayList<String>();}
-   : i=id {value.add($i.text);} ('.' i=id {value.add($i.text);})*;
+   : 'pragma' i=id a=arg_list ';' {value=new PragmaNode($i.text,$a.value);}
+   | 'pragma' i=id ';' {value=new PragmaNode($i.text);};
+arg returns [ArgNode value]
+   : i=id '=>' e=expr {value=new ArgNode($i.text,$e.value);}
+   | e=expr {value=new ArgNode($e.value);};
+arg_list returns [List<ArgNode> value]
+@init {value=new ArrayList<ArgNode>();}
+   : '(' (a=arg {value.add($a.value);} (',' a=arg {value.add($a.value);})*)? ')';
+arg_list_opt returns [List<ArgNode> value]
+@init {value=new ArrayList<ArgNode>();}
+   : ('(' (a=arg {value.add($a.value);} (',' a=arg {value.add($a.value);})*)? ')')?;
 
 compilation_unit returns [CompilationNode value]
    : 'package' p=pkg_spec ';' {value=$p.spec;}
    | 'package' 'body' b=pkg_body ';' {value=$b.value;}
    | s=subprogram {value=$s.value;};
 pkg_spec returns [PkgSpecNode spec]
-   : i=id {spec=new PkgSpecNode($i.text);} 'is' (s=spec_decl {spec.addDecl($s.value);})* ('private' (p=private_item {spec.addItem($p.item);})+)? 'end' id?;
+   : i=id 'is' s=spec_decl_list p=private_item_list_opt 'end' id? {spec=new PkgSpecNode($i.text,$s.decls,$p.privs);};
 pkg_body returns [PkgBodyNode value]
-   : i=id {value=new PkgBodyNode($i.text);} 'is' (d=body_decl {value.addDecl($d.value);})* (s=stmt_part {value.setStmts($s.sts);})? (e=exception_part {value.setExceps($e.exs);})? 'end' id?;
+   : i=id 'is' b=body_decl_list s=stmt_part_opt e=exception_part_opt 'end' id? {value=new PkgBodyNode($i.text,$b.decls,$s.sts,$e.exs);};
+
+private_item_list_opt returns [List<PrivateItemNode> privs]
+@init {privs=new ArrayList<PrivateItemNode>();}
+   : ('private' (p=private_item {privs.add($p.item);})+)?;
+
+spec_decl_list returns [List<DeclNode> decls]
+@init {decls=new ArrayList<DeclNode>();}
+   : (s=spec_decl {decls.add($s.value);})*;
+body_decl_list returns [List<DeclNode> decls]
+@init {decls=new ArrayList<DeclNode>();}
+   : (b=body_decl {decls.add($b.value);})*;
 
 private_type_decl returns [PrivateTypeDeclNode value]
    : 'type' i=id 'is' 'private' ';' {value=new PrivateTypeDeclNode($i.text);};
@@ -50,8 +81,16 @@ spec_decl returns [DeclNode value]
    | s=subtype_decl {value=$s.value;}
    | r=pragma {value=$r.value;}
    | f=subprogram_decl {value=$f.value;}
-   | 'use' n=name_list ';' {value=new UseNode($n.names);}
+   | 'use' l=lib_list ';' {value=new UseNode($l.value);}
    | i=id_list ':' 'exception' ';' {value=new ExceptionDeclNode($i.ids);};
+
+stmt_list returns [List<StmtNode> sts]
+@init {sts=new ArrayList<StmtNode>();}
+   : (s=stmt {sts.add($s.st);})+;
+
+stmt_part_opt returns [List<StmtNode> sts]
+@init {sts=new ArrayList<StmtNode>();}
+   : ('begin' (s=stmt {sts.add($s.st);})+)?;
 
 stmt_part returns [List<StmtNode> sts]
 @init {sts=new ArrayList<StmtNode>();}
@@ -63,19 +102,19 @@ body_decl returns [DeclNode value]
    | t=type_decl {value=$t.value;}
    | s=subtype_decl {value=$s.value;}
    | p=pragma {value=$p.value;}
-   | 'use' n=name_list ';' {value=new UseNode($n.names);}
+   | 'use' l=lib_list ';' {value=new UseNode($l.value);}
    | i=id_list ':' 'exception' ';' {value=new ExceptionDeclNode($i.ids);};
 
 subprogram returns [SubDeclNode value]
-   : s=subprogram_spec {value=new SubDeclNode($s.spec);} (b=subprogram_body {value.setBody($b.value);})? ';';
+   : {boolean i=false;} s=subprogram_spec (b=subprogram_body {i=true;})? ';'
+      {value=(i?new SubDeclNode($s.spec,$b.value):new SubDeclNode($s.spec));};
 
 subprogram_body returns [SubBodyNode value]
-@init {value=new SubBodyNode();}
-   : 'is' (d=body_decl {value.addDecl($d.value);})* s=stmt_part {value.setStmts($s.sts);} (e=exception_part {value.setExceps($e.exs);})? 'end' id?;
+   : 'is' d=body_decl_list s=stmt_part e=exception_part_opt 'end' id? {value=new SubBodyNode($d.decls,$s.sts,$e.exs);};
 
 object_decl returns [ObjDeclNode value]
-@init {value=new ObjDeclNode();}
-   : i=id_list ':' ('constant' {value.setConst(true);})? t=type_or_subtype {value.setDecl($i.ids, $t.type);} (':=' e=expr {value.setInit($e.value);})? ';';
+   : {boolean con=false, i=false;} l=id_list ':' ('constant' {con=true;})? t=type_or_subtype (':=' e=expr {i=true;})? ';'
+      {value=(i?new ObjDeclNode(con,$l.ids,$t.type,$e.value):new ObjDeclNode(con,$l.ids,$t.type));};
 id_list returns [List<String> ids]
 @init {ids=new ArrayList<String>();}
    : i=id {ids.add($i.text);} (',' i=id {ids.add($i.text);})*;
@@ -99,18 +138,26 @@ incomplete_type_decl returns [TypeNode type]
    : 'type' i=id ';' {type=new IncompleteTypeNode($i.text);};
 
 access_type_def returns [AccessTypeNode type]
-   : 'access' i=id {type=new AccessTypeNode($i.text);}
-      ( r=range_constraint {type.setConstraint($r.con);}
-      | c=index_constraint {type.setConstraint($c.ranges);} )?;
+   : 'access' i=id r=range_constraint {type=new AccessTypeNode($i.text, $r.con);}
+   | 'access' i=id c=index_constraint {type=new AccessTypeNode($i.text, $c.ranges);}
+   | 'access' i=id {type=new AccessTypeNode($i.text);};
 
 record_type_def returns [RecordTypeNode type]
    : 'record' c=component_list {type=new RecordTypeNode($c.comps);} 'end' 'record';
-component_list returns [ComponentListNode comps]
-@init {comps=new ComponentListNode();}
-   : (c=component_decl {comps.add($c.comp);})+ (v=variant_part {comps.setVariant($v.value);})?
-   | 'null' ';';
-component_decl returns [ComponentNode comp]
-   : i=id_list ':' t=type_or_subtype {comp=new ComponentNode($i.ids,$t.type);} (':=' e=expr {comp.setInit($e.value);})? ';';
+
+comps returns [List<RecordComponentNode> comps]
+@init {comps=new ArrayList<RecordComponentNode>();}
+   : (c=component_decl {comps.add($c.comp);})+;
+
+component_list returns [RecordComponentListNode comps]
+   : 'null' ';' {comps=new RecordComponentListNode();}
+   | {boolean i=false;} c=comps (v=variant_part {i=true;})?
+      {comps=(i?new RecordComponentListNode($c.comps,$v.value):new RecordComponentListNode($c.comps));};
+
+component_decl returns [RecordComponentNode comp]
+   : {boolean i=false;} l=id_list ':' t=type_or_subtype (':=' e=expr {i=true;})? ';'
+      {comp=(i?new RecordComponentNode($l.ids,$t.type,$e.value):new RecordComponentNode($l.ids,$t.type));};
+
 variant_part returns [VariantNode value]
 @init {List<VariantChoiceNode> vars=new ArrayList<VariantChoiceNode>();}
    : 'case' i=id 'is' (v=variant {vars.add($v.value);})+ 'end' 'case' ';' {value=new VariantNode($i.text, vars);};
@@ -142,18 +189,22 @@ element_type returns [TypeNode type]
 subtype_decl returns [SubtypeDeclNode value]
    : 'subtype' i=id 'is' s=subtype_def ';' {value=new SubtypeDeclNode($i.text,$s.type);};
 
-exception_part returns [List<ExceptionHandlerNode> exs]
+exception_part_opt returns [List<ExceptionHandlerNode> exs]
 @init {exs=new ArrayList<ExceptionHandlerNode>();}
-   : 'exception' (e=exception_handler {exs.add($e.ex);})+;
+   : ('exception' (e=exception_handler {exs.add($e.ex);})+)?;
 exception_handler returns [ExceptionHandlerNode ex]
-   : 'when' e=exception_when {ex=new ExceptionHandlerNode($e.value);} '=>' (s=stmt {ex.addStmt($s.st);})+;
+   : 'when' e=exception_when '=>' s=stmt_list {ex=new ExceptionHandlerNode($e.value,$s.sts);};
 exception_when returns [WhenNode value]
-   : n=name {value.addChoice(new ChoiceNode($n.name));} ('|' n=name {value.addChoice(new ChoiceNode($n.name));})* '=>' (s=stmt {value.addStmt($s.st);})+
+   : n=name_choice_list '=>' s=stmt_list {value=new WhenNode($n.value,$s.sts);}
    | o=other {value=$o.value;};
 
-decl_part returns [List<DeclNode> decls]
+name_choice_list returns [List<ChoiceNode> value]
+@init {value=new ArrayList<ChoiceNode>();}
+   : n=name {value.add(new ChoiceNode($n.name));} ('|' n=name {value.add(new ChoiceNode($n.name));})*;
+
+decl_part_opt returns [List<DeclNode> decls]
 @init {decls=new ArrayList<DeclNode>();}
-   : 'declare' (d=body_decl {decls.add($d.value);})+;
+   : ('declare' (d=body_decl {decls.add($d.value);})+)?;
 
 subtype_def returns [SubtypeNode type]
    : i=id c=range_constraint {type=new SubtypeNode($i.text,$c.con);}
@@ -175,7 +226,7 @@ discrete_range returns [RangeNode value]
    | r=range {value=$r.value;};
 
 subprogram_decl returns [SubDeclNode value]
-   : s=subprogram_spec {value=new SubDeclNode($s.spec);} ';';
+   : s=subprogram_spec ';' {value=new SubDeclNode($s.spec);};
 subprogram_spec returns [SubSpecNode spec]
    : 'procedure' i=id p=formal_part {spec=new ProcNode($i.text,$p.params);}
    | 'function' d=designator p=formal_part 'return' i=id {spec=new FuncNode($d.text,$p.params,$i.text);};
@@ -208,43 +259,57 @@ assign_stmt returns [StmtNode st]
 null_stmt returns [NullStmtNode st]
    : 'null' ';' {st=new NullStmtNode();};
 block returns [BlockStmtNode st]
-@init {st=new BlockStmtNode();}
-   : (i=id ':' {st.setName($i.text);})? (d=decl_part {st.setDecls($d.decls);})? s=stmt_part {st.setStmts($s.sts);} (e=exception_part {st.setExceps($e.exs);})? 'end' id? ';';
+   : {boolean n=false;} (i=id ':' {n=true;})? d=decl_part_opt s=stmt_part e=exception_part_opt 'end' id? ';'
+      {st=(n?new BlockStmtNode($i.text,$d.decls,$s.sts,$e.exs):new BlockStmtNode($d.decls,$s.sts,$e.exs));};
 return_stmt returns [ReturnStmtNode st]
    : 'return' {st=new ReturnStmtNode();} (e=expr {st=new ReturnStmtNode($e.value);})? ';';
 raise_stmt returns [RaiseStmtNode st]
    : 'raise' n=name {st=new RaiseStmtNode($n.name);} ';';
+
 if_stmt returns [IfStmtNode st]
-   : a=if_part {st=new IfStmtNode($a.value);} (b=elsif_part {st.addElsif($b.value);})* (c=else_part {st.addElse($c.value);})? 'end' 'if' ';';
+   : 'if' i=if_clause_list 'end' 'if' ';' {st=new IfStmtNode($i.value);};
+
+if_clause_list returns [List<IfClauseNode> value]
+@init {value=new ArrayList<IfClauseNode>();}
+   : a=if_part {value.add($a.value);} (b=elsif_part {value.add($b.value);})* (c=else_part {value.add($c.value);})?;
+
 if_part returns [IfClauseNode value]
-@init {value=new IfClauseNode();}
-   : 'if' e=expr {value.setExpr($e.value);} 'then' (s=stmt {value.addStmt($s.st);})+;
+   : e=expr 'then' s=stmt_list {value=new IfClauseNode($e.value,$s.sts);};
 elsif_part returns [IfClauseNode value]
-@init {value=new IfClauseNode();}
-   : 'elsif' e=expr {value.setExpr($e.value);} 'then' (s=stmt {value.addStmt($s.st);})+;
+   : 'elsif' v=if_part {value=$v.value;};
 else_part returns [IfClauseNode value]
-@init {value=new IfClauseNode();}
-   : 'else' (s=stmt {value.addStmt($s.st);})+;
+   : 'else' s=stmt_list {value=new IfClauseNode($s.sts);};
+
 loop_stmt returns [LoopStmtNode st]
-@init {st=new LoopStmtNode();}
-   : (i=id ':' {st.setName($i.text);})? (t=it_clause {st.setClause($t.value);})? 'loop' (s=stmt {st.addStmt($s.st);})+ 'end' 'loop' ';';
+   : {boolean i=false;} (n=id ':' {i=true;})? t=it_clause 'loop' s=stmt_list 'end' 'loop' ';'
+      {st=(i?new LoopStmtNode($n.text,$t.value,$s.sts):new LoopStmtNode($t.value,$s.sts));};
+
 it_clause returns [LoopClauseNode value]
    : 'while' e=expr {value=new WhileClauseNode($e.value);}
-   | {boolean reverse=false;} 'for' i=id 'in' ('reverse' {reverse=true;})? d=discrete_range {value=new ForClauseNode($i.text, $d.value, reverse);};
+   | {boolean reverse=false;} 'for' i=id 'in' ('reverse' {reverse=true;})? d=discrete_range {value=new ForClauseNode($i.text, $d.value, reverse);}
+   | {value=new WhileClauseNode(new BoolValNode(true));};
 exit_stmt returns [ExitStmtNode st]
-@init {st=new ExitStmtNode();}
-   : 'exit' (i=id {st.setName($i.text);})? ('when' e=expr {st.setWhen($e.value);})? ';';
+@init {ExprNode cond=new BoolValNode(true);}
+   : {boolean i=false;} 'exit' (n=id {i=true;})? ('when' e=expr {cond=$e.value;})? ';'
+      {st=(i?new ExitStmtNode($n.text,cond):new ExitStmtNode(cond));};
 case_stmt returns [CaseStmtNode st]
-   : 'case' e=expr {st=new CaseStmtNode($e.value);} 'is' ('when' w=when {st.addWhen($w.value);})* ('when' w=other {st.addWhen($w.value);}) 'end' 'case' ';';
+   : 'case' e=expr 'is' w=when_list 'end' 'case' ';' {st=new CaseStmtNode($e.value,$w.value);};
+
+when_list returns [List<WhenNode> value]
+@init {value=new ArrayList<WhenNode>();}
+   : ('when' w=when {value.add($w.value);})* 'when' w=other {value.add($w.value);};
+
 when returns [WhenNode value]
-@init {value=new WhenNode();}
-   : c=choice {value.addChoice($c.value);} ('|' c=choice {value.addChoice($c.value);})* '=>' (s=stmt {value.addStmt($s.st);})+;
+   : c=choice_list '=>' s=stmt_list {value=new WhenNode($c.value,$s.sts);};
+
+choice_list returns [List<ChoiceNode> value]
+@init {value=new ArrayList<ChoiceNode>();}
+   : c=choice {value.add($c.value);} ('|' c=choice {value.add($c.value);})*;
+
 other returns [WhenNode value]
-@init {value=new WhenNode();}
-   : 'others' '=>' (s=stmt {value.addStmt($s.st);})+;
+   : 'others' '=>' s=stmt_list {value=new WhenNode($s.sts);};
 choice returns [ChoiceNode value]
-@init {value=new ChoiceNode();}
-   : a=expr {value.setVal($a.value);} (DOTDOT b=expr {value.setRange($a.value,$b.value);})?;
+   : a=expr {value=new ChoiceNode($a.value);} (DOTDOT b=expr {value=new ChoiceNode($a.value,$b.value);})?;
 
 log_op returns [BinNode.Op op]
    : 'and' {op=BinNode.Op.AND;} ('then' {op=BinNode.Op.AND_THEN;})?
@@ -295,14 +360,20 @@ literal returns [ValNode value]
    : i=INT {value=new IntValNode($i.text);}
    | c=CHAR {value=new CharValNode($c.text);}
    | s=STR {value=new StrValNode($s.text);}
+   | b=BOOL {value=new BoolValNode($b.text);}
    | f=FLOAT {value=new FloatValNode($f.text);};
 
-name returns [NameNode name]
-   : i=id {name=new NameNode($i.text);} (s=name_suffix {name.addSuffix($s.suff);})* ('.' 'all' {name.addSuffix(new AllSuffixNode());})?;
 name_suffix returns [SuffixNode suff]
    : '.' s=designator {suff=new DotSuffixNode($s.text);}
-   | '(' {ParenSuffixNode p=new ParenSuffixNode();} e=expr {p.add($e.value);} (',' e=expr {p.add($e.value);})* ')' {suff=p;}
+   | a=arg_list {suff=new ParenSuffixNode($a.value);}
    | TICK i=id {suff=new AttrSuffixNode($i.text);};
+name_suffix_list returns [List<SuffixNode> suffs]
+@init {suffs=new ArrayList<SuffixNode>();}
+   : (s=name_suffix {suffs.add($s.suff);})+ ('.' 'all' {suffs.add(new AllSuffixNode());})?
+   | '.' 'all' {suffs.add(new AllSuffixNode());};
+name returns [NameNode name]
+   : i=id s=name_suffix_list {name=new NameNode($i.text, $s.suffs);}
+   | i=id {name=new NameNode($i.text);};
 
 agg returns [List<ComponentNode> value]
 @init {value=new ArrayList<ComponentNode>();}
@@ -340,6 +411,7 @@ name_list returns [List<NameNode> names]
 
 TICK: {input.LA(3) != '\'' || input.LA(5) == '\''}?=> '\'';
 CHAR: {input.LA(3) == '\'' && input.LA(5) != '\''}?=> '\'' . '\'';
+BOOL: 'true' | 'false';
 STR: '"' ~('"' | EOL)* '"';
 NAME: ALPHA ('_'? (ALPHA|DIGIT))*;
 INT: INT_NUM EXP?;

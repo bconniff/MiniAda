@@ -3,9 +3,9 @@ package trees;
 import java.util.List;
 
 public class SubtypeNode extends AbstractTreeNode implements TypeNode {
-   private final String id;
-   private final RangeConstraintNode con;
-   private final List<RangeNode> ranges;
+   public final String id;
+   public final RangeConstraintNode con;
+   public final List<RangeNode> ranges;
 
    public SubtypeNode(String id, RangeConstraintNode range) {
       this.id = id;
@@ -24,4 +24,6 @@ public class SubtypeNode extends AbstractTreeNode implements TypeNode {
       id = null;
       ranges = null;
    }
+
+   public void accept(Visitor v) { v.visit(this); }
 }

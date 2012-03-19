@@ -1,9 +1,9 @@
 package trees;
 
 public class BinNode extends AbstractTreeNode implements ExprNode{
-   private final Op binOp;
-   private final ExprNode r;
-   private final ExprNode l;
+   public final Op binOp;
+   public final ExprNode r;
+   public final ExprNode l;
 
    public static enum Op {
       AND, OR, AND_THEN, OR_ELSE, EQ, LT, GT, LE, NE, GE, PLUS, MINUS, AMP, MULT, DIV, MOD, POW;
@@ -14,4 +14,6 @@ public class BinNode extends AbstractTreeNode implements ExprNode{
       this.r = r;
       this.l = l;
    }
+
+   public void accept(Visitor v) { v.visit(this); }
 }

@@ -4,19 +4,15 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class PkgSpecNode extends AbstractTreeNode implements CompilationNode {
-   private final String name;
-   private final List<PrivateItemNode> items = new ArrayList<PrivateItemNode>();
-   private final List<DeclNode> decls = new ArrayList<DeclNode>();
+   public final String name;
+   public final List<PrivateItemNode> items;
+   public final List<DeclNode> decls;
 
-   public PkgSpecNode(String name) {
-      this.name = name;
+   public PkgSpecNode(String n, List<DeclNode> d, List<PrivateItemNode> i) {
+      name = n;
+      decls = d;
+      items = i;
    }
 
-   public void addItem(PrivateItemNode item) {
-      items.add(item);
-   }
-
-   public void addDecl(DeclNode decl) {
-      decls.add(decl);
-   }
+   public void accept(Visitor v) { v.visit(this); }
 }

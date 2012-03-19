@@ -4,14 +4,17 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class NameNode extends AbstractTreeNode implements ExprNode {
-   private final String s;
-   private final List<SuffixNode> suffs = new ArrayList<SuffixNode>();
+   public final String name;
+   public final List<SuffixNode> suffs;
 
-   public NameNode(String s) {
-      this.s = s;
+   public NameNode(String n, List<SuffixNode> s) {
+      name = n;
+      suffs = s;
    }
 
-   public void addSuffix(SuffixNode suff) {
-      suffs.add(suff);
+   public NameNode(String n) {
+      this(n, null);
    }
+
+   public void accept(Visitor v) { v.visit(this); }
 }

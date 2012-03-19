@@ -1,9 +1,9 @@
 package trees;
 
 public class ComponentChoiceNode extends AbstractTreeNode {
-   private final ExprNode expr;
-   private final RangeNode range;
-   private final SubtypeNode type;
+   public final ExprNode expr;
+   public final RangeNode range;
+   public final SubtypeNode type;
 
    public ComponentChoiceNode() {
       this.expr = null;
@@ -28,4 +28,6 @@ public class ComponentChoiceNode extends AbstractTreeNode {
       this.range = null;
       this.type = type;
    }
+
+   public void accept(Visitor v) { v.visit(this); }
 }

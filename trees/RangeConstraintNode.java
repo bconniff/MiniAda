@@ -1,7 +1,7 @@
 package trees;
 
 public class RangeConstraintNode extends AbstractTreeNode {
-   private final RangeNode range;
+   public final RangeNode range;
 
    public RangeConstraintNode() {
       this.range = null;
@@ -10,4 +10,6 @@ public class RangeConstraintNode extends AbstractTreeNode {
    public RangeConstraintNode(RangeNode range) {
       this.range = range;
    }
+
+   public void accept(Visitor v) { v.visit(this); }
 }

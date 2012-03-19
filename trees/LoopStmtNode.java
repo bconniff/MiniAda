@@ -4,21 +4,23 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class LoopStmtNode extends AbstractTreeNode implements StmtNode {
-   private String name;
-   private LoopClauseNode loop;
-   private List<StmtNode> stmts = new ArrayList<StmtNode>();
+   public final String name;
+   public final LoopClauseNode loop;
+   public final List<StmtNode> stmts;
 
-   public LoopStmtNode() {}
-
-   public void setName(String name) {
-      this.name = name;
+   public LoopStmtNode(String n, LoopClauseNode l, List<StmtNode> s) {
+      name = n;
+      loop = l;
+      stmts = s;
    }
 
-   public void setClause(LoopClauseNode loop) {
-      this.loop = loop;
+   public LoopStmtNode(LoopClauseNode l, List<StmtNode> s) {
+      this(null, l, s);
    }
 
-   public void addStmt(StmtNode stmt) {
-      stmts.add(stmt);
+   public LoopStmtNode(List<StmtNode> s) {
+      this(null, new WhileClauseNode(new BoolValNode(true)), s);
    }
+
+   public void accept(Visitor v) { v.visit(this); }
 }

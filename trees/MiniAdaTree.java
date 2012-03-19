@@ -4,16 +4,13 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class MiniAdaTree extends AbstractTreeNode {
-   private final List<DirecNode> direcs = new ArrayList<DirecNode>();
-   private final List<CompilationNode> comps = new ArrayList<CompilationNode>();
+   public final List<DirecNode> direcs;
+   public final List<CompilationNode> comps;
 
-   public MiniAdaTree() {}
-
-   public void addDirec(DirecNode direc) {
-      direcs.add(direc);
+   public MiniAdaTree(List<DirecNode> d, List<CompilationNode> c) {
+      direcs = d;
+      comps = c;
    }
 
-   public void addUnit(CompilationNode comp) {
-      comps.add(comp);
-   }
+   public void accept(Visitor v) { v.visit(this); }
 }

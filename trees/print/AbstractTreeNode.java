@@ -1,10 +1,9 @@
-package trees.print;
+package trees;
 
 import java.lang.reflect.*;
 import java.util.*;
 
 public abstract class AbstractTreeNode {
-
 	private static final HashSet<Class> BASIC;
 
 	//Builds a set of the primitive types
@@ -19,6 +18,8 @@ public abstract class AbstractTreeNode {
 		BASIC.add(Character.class);
 	}
 
+	abstract public void accept(Visitor v);
+
 	//Returns a JSON style string of the current object
 	public String toString() {
 		//Get all the fields in the object
@@ -31,10 +32,11 @@ public abstract class AbstractTreeNode {
 				//If the field is private allow it to be accessed
 				field.setAccessible(true);
 				Object obj = field.get(this);
-				//Add name and colon
-				toRet.append(field.getName());
-				toRet.append(" : ");
-				if(obj != null)
+				if(obj != null) {
+					//Add name and colon
+					toRet.append(field.getName());
+					toRet.append(" : ");
+
 					//If the object is an array
 					if(obj.getClass().isArray()) {
 						//Get the number of dimensions
@@ -70,18 +72,18 @@ public abstract class AbstractTreeNode {
 							toRet.append("}");
 						}
 					}
-				//null object
-				else {
-					toRet.append("null");
+					toRet.append(", ");
 				}
-				toRet.append(", ");
 			} catch(IllegalAccessException e) {
-				e.printStackTrace();				
+				e.printStackTrace();
 			}
 		}
 		//Remove trailing space and comma again
-		toRet.delete(toRet.length()-2, toRet.length());
+		if (fields.length > 0)
+			toRet.delete(toRet.length()-2, toRet.length());
 		toRet.append("}");
 		return toRet.toString();
 	}
 }
+
+// vim:noet

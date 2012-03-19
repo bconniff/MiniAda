@@ -1,11 +1,11 @@
 package trees;
 
 public class RangeNode extends AbstractTreeNode {
-   private final ExprNode a;
-   private final ExprNode b;
-   private final String name;
-   private final RangeConstraintNode con;
-   private final AttrNode attr;
+   public final ExprNode a;
+   public final ExprNode b;
+   public final String name;
+   public final RangeConstraintNode con;
+   public final AttrNode attr;
 
    public RangeNode(ExprNode a, ExprNode b) {
       this.a = a;
@@ -38,4 +38,6 @@ public class RangeNode extends AbstractTreeNode {
       con = null;
       this.attr = attr;
    }
+
+   public void accept(Visitor v) { v.visit(this); }
 }

@@ -4,14 +4,17 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class PragmaNode extends AbstractTreeNode implements DirecNode,StmtNode,DeclNode {
-   private final String name;
-   private final List<PragmaArgNode> args = new ArrayList<PragmaArgNode>();
+   public final String name;
+   public final List<ArgNode> args;
 
-   public PragmaNode(String name) {
-      this.name = name;
+   public PragmaNode(String n, List<ArgNode> a) {
+      name = n;
+      args = a;
    }
 
-   public void addArg(PragmaArgNode arg) {
-      args.add(arg);
+   public PragmaNode(String n) {
+      this(n, null);
    }
+
+   public void accept(Visitor v) { v.visit(this); }
 }

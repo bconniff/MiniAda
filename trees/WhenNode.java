@@ -4,16 +4,17 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class WhenNode extends AbstractTreeNode {
-   private final List<ChoiceNode> choices = new ArrayList<ChoiceNode>();
-   private final List<StmtNode> stmts = new ArrayList<StmtNode>();
+   public final List<ChoiceNode> choices;
+   public final List<StmtNode> stmts;
 
-   public WhenNode() {}
-
-   public void addChoice(ChoiceNode choice) {
-      choices.add(choice);
+   public WhenNode(List<ChoiceNode> c, List<StmtNode> s) {
+      choices = c;
+      stmts = s;
    }
 
-   public void addStmt(StmtNode stmt) {
-      stmts.add(stmt);
+   public WhenNode(List<StmtNode> s) {
+      this(null, s);
    }
+
+   public void accept(Visitor v) { v.visit(this); }
 }

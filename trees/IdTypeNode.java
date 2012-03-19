@@ -1,9 +1,11 @@
 package trees;
 
 public class IdTypeNode extends AbstractTreeNode implements TypeNode {
-   private final String name;
+   public final String name;
 
    public IdTypeNode(String name) {
       this.name = name;
    }
+
+   public void accept(Visitor v) { v.visit(this); }
 }

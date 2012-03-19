@@ -1,9 +1,11 @@
 package trees;
 
 public class RecordTypeNode extends AbstractTreeNode implements TypeNode {
-   private final ComponentListNode comps;
+   public final RecordComponentListNode comps;
 
-   public RecordTypeNode(ComponentListNode comps) {
+   public RecordTypeNode(RecordComponentListNode comps) {
       this.comps = comps;
    }
+
+   public void accept(Visitor v) { v.visit(this); }
 }

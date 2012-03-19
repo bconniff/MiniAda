@@ -1,7 +1,7 @@
 package trees;
 
 public class ReturnStmtNode extends AbstractTreeNode implements StmtNode {
-   private final ExprNode expr;
+   public final ExprNode expr;
 
    public ReturnStmtNode() {
       this.expr = null;
@@ -10,4 +10,6 @@ public class ReturnStmtNode extends AbstractTreeNode implements StmtNode {
    public ReturnStmtNode(ExprNode expr) {
       this.expr = expr;
    }
+
+   public void accept(Visitor v) { v.visit(this); }
 }

@@ -3,9 +3,9 @@ package trees;
 import java.util.List;
 
 public class ParamNode extends AbstractTreeNode {
-   private final List<String> names;
-   private final Mode m;
-   private final TypeNode type;
+   public final List<String> names;
+   public final Mode m;
+   public final TypeNode type;
 
    public static enum Mode {
       IN, OUT, IN_OUT;
@@ -16,4 +16,6 @@ public class ParamNode extends AbstractTreeNode {
       this.m = m;
       this.type = type;
    }
+
+   public void accept(Visitor v) { v.visit(this); }
 }
