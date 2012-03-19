@@ -1,6 +1,7 @@
 package trees;
 
 import visitors.Visitor;
+
 public class UnaryNode extends AbstractTreeNode implements ExprNode {
    public final Op unOp;
    public final ExprNode expr;

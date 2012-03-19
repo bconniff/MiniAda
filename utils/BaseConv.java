@@ -8,6 +8,7 @@ public class BaseConv {
       private final String n;
       private final int base;
 
+      private Boolean val = null;
       private Long dec = null;
       private Double frac = null;
 
@@ -32,12 +33,24 @@ public class BaseConv {
             c = c - 55;
          else c = -1;
 
-         /*
          if (!(0 <= c && c < base))
-            throw new RecognitionException();
-         */
+            return -1;
 
          return c;
+      }
+
+      public boolean isValid() {
+         if (val == null) {
+            val = true;
+            for (int i = 0; i < n.length(); i++) {
+               if (valOf(i) < 0) {
+                  val = false;
+                  break;
+               }
+            }
+         }
+
+         return val;
       }
 
       // convert the integer part of a number
@@ -73,31 +86,71 @@ public class BaseConv {
       }
    }
 
-   public static long toLong(String s) {
-      final int sharp1, sharp2, base;
+   public static long toLong(String text) {
+      long v = 0;
 
-      sharp1 = s.indexOf("#");
-      sharp2 = s.indexOf("#", sharp1 + 1);
+      final String s = text.toLowerCase();
+      final int sharp1 = s.indexOf("#");
 
-      base = Integer.parseInt(s.substring(0, sharp1));
+      if (sharp1 > 0) {
+         final int sharp2, base, e;
+         sharp2 = s.indexOf("#", sharp1 + 1);
+         e = s.indexOf("e", sharp2 + 1);
 
-      return (new Converter(s.substring(sharp1+1, sharp2), base)).toInt();
+         base = Integer.parseInt(s.substring(0, sharp1));
+
+         v = (new Converter(s.substring(sharp1+1, sharp2), base)).toInt();
+         if (e > 0) v *= Math.pow(base, Integer.parseInt(s.substring(e+1)));
+      } else {
+         final int e;
+         e = s.indexOf("e");
+
+         if (e > 0) {
+            v = Long.parseLong(s.substring(0,e));
+            v *= Math.pow(10, Integer.parseInt(s.substring(e+1)));
+         } else {
+            v = Long.parseLong(s);
+         }
+      }
+
+      return v;
    }
 
-   public static double toDouble(String s) {
-      final int sharp1, sharp2, dot, base;
+   public static double toDouble(String text) {
+      double v = 0;
 
-      sharp1 = s.indexOf("#");
-      dot = s.indexOf(".", sharp1 + 1);
-      sharp2 = s.indexOf("#", dot + 1);
+      final String s = text.toLowerCase();
+      final int sharp1 = s.indexOf("#");
 
-      base = Integer.parseInt(s.substring(0, sharp1));
+      if (sharp1 > 0) {
+         final int sharp2, dot, base, e;
+         dot = s.indexOf(".", sharp1 + 1);
+         sharp2 = s.indexOf("#", dot + 1);
+         e = s.indexOf("e", sharp2 + 1);
 
-      // convert the integer part
-      final long i_val = (new Converter(s.substring(sharp1+1, dot), base).toInt());
-      // convert the fractional part
-      final double f_val = (new Converter(s.substring(dot+1, sharp2), base).toFrac());
+         base = Integer.parseInt(s.substring(0, sharp1));
 
-      return (double)i_val + f_val;
+         final long i_val = (new Converter(s.substring(sharp1+1, dot), base).toInt());
+         final double f_val = (new Converter(s.substring(dot+1, sharp2), base).toFrac());
+
+         v = (double)i_val + f_val;
+         if (e > 0) v *= Math.pow(base, Integer.parseInt(s.substring(e+1)));
+      } else {
+         final int e;
+         e = s.indexOf("e");
+
+         if (e > 0) {
+            v = Double.parseDouble(s.substring(0,e));
+            v *= Math.pow(10, Integer.parseInt(s.substring(e+1)));
+         } else {
+            v = Double.parseDouble(s);
+         }
+      }
+
+      return v;
+   }
+
+   public static boolean isValid(String text, int base) {
+      return (new Converter(text, base)).isValid();
    }
 }

@@ -1,6 +1,7 @@
 package trees;
 
 import visitors.Visitor;
+
 public class BoolValNode extends AbstractTreeNode implements ValNode {
    public final boolean val;
 

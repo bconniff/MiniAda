@@ -1,6 +1,7 @@
 package trees;
 
 import visitors.Visitor;
+
 public class AssignStmtNode extends AbstractTreeNode implements StmtNode {
    public final NameNode name;
    public final ExprNode expr;

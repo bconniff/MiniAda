@@ -1,6 +1,7 @@
 package trees;
 
 import visitors.Visitor;
+
 public class IncompleteTypeNode extends AbstractTreeNode implements TypeNode {
    public final String name;
 

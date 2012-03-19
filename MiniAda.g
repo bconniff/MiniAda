@@ -6,6 +6,10 @@ grammar MiniAda;
    import java.util.ArrayList;
 }
 
+@lexer::header {
+   import static utils.BaseConv.*;
+}
+
 //
 // GRAMMAR RULES
 //
@@ -145,14 +149,14 @@ access_type_def returns [AccessTypeNode type]
 record_type_def returns [RecordTypeNode type]
    : 'record' c=component_list {type=new RecordTypeNode($c.comps);} 'end' 'record';
 
-comps returns [List<RecordComponentNode> comps]
+non_variant_part returns [List<RecordComponentNode> comps]
 @init {comps=new ArrayList<RecordComponentNode>();}
    : (c=component_decl {comps.add($c.comp);})+;
 
-component_list returns [RecordComponentListNode comps]
-   : 'null' ';' {comps=new RecordComponentListNode();}
-   | {boolean i=false;} c=comps (v=variant_part {i=true;})?
-      {comps=(i?new RecordComponentListNode($c.comps,$v.value):new RecordComponentListNode($c.comps));};
+component_list returns [List<RecordItemNode> comps]
+@init {comps=new ArrayList<RecordItemNode>();}
+   : 'null' ';'
+   |  c=non_variant_part {comps.addAll($c.comps);} (v=variant_part {comps.add($v.value);})?;
 
 component_decl returns [RecordComponentNode comp]
    : {boolean i=false;} l=id_list ':' t=type_or_subtype (':=' e=expr {i=true;})? ';'
@@ -362,8 +366,8 @@ literal returns [ValNode value]
    | s=STR {value=new StrValNode($s.text);}
    | b=BOOL {value=new BoolValNode($b.text);}
    | f=FLOAT {value=new FloatValNode($f.text);}
-   | x=BASE_INT {value=new IntValNode($x.text, true);}
-   | y=BASE_FLOAT {value=new FloatValNode($y.text, true);};
+   | x=BASE_INT {value=new IntValNode($x.text);}
+   | y=BASE_FLOAT {value=new FloatValNode($y.text);};
 
 name_suffix returns [SuffixNode suff]
    : '.' s=designator {suff=new DotSuffixNode($s.text);}
@@ -416,12 +420,12 @@ CHAR: {input.LA(3) == '\'' && input.LA(5) != '\''}?=> '\'' . '\'';
 BOOL: 'true' | 'false';
 STR: '"' ~('"' | EOL)* '"';
 NAME: ALPHA ('_'? (ALPHA|DIGIT))*;
-INT: INT_NUM EXP?;
+INT: INT_NUM INT_EXP?;
 DOTDOT: '..';
 FLOAT: (INT_NUM '.' INT_NUM EXP?)=> INT_NUM '.' INT_NUM EXP? {$type=FLOAT;}
      | INT_NUM {$type=INT;};
-BASE_INT: INT_NUM '#' HEX_NUM '#' EXP?;
-BASE_FLOAT: INT_NUM '#' HEX_NUM '.' HEX_NUM '#' EXP?;
+BASE_INT: i=INT_NUM '#' v=HEX_NUM {isValid($v.text,Integer.parseInt($i.text))}? '#' EXP?;
+BASE_FLOAT: i=INT_NUM '#' a=HEX_NUM '.' b=HEX_NUM {isValid($a.text+$b.text,Integer.parseInt($i.text))}? '#' EXP?;
 
 // these get ignored
 COMMENT: '--' (options{greedy=false;}:.)* EOL {skip();};
@@ -434,6 +438,7 @@ fragment HEX: (DIGIT | 'a'..'f' | 'A'..'F');
 fragment EOL: '\n';
 fragment INT_NUM: DIGIT ('_'? DIGIT)*;
 fragment HEX_NUM: HEX ('_'? HEX)*;
+fragment INT_EXP: ('e'|'E') '+'? INT_NUM;
 fragment EXP: ('e'|'E') ('+'|'-')? INT_NUM;
 
 // vim: ft=antlr3

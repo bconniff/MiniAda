@@ -1,6 +1,7 @@
 package trees;
 
 import visitors.Visitor;
+
 public class RangeConstraintNode extends AbstractTreeNode {
    public final RangeNode range;
 

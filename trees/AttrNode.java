@@ -1,6 +1,7 @@
 package trees;
 
 import visitors.Visitor;
+
 public class AttrNode extends AbstractTreeNode {
    public final String a;
    public final String b;

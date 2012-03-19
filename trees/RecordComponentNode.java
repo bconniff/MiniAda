@@ -3,7 +3,7 @@ package trees;
 import visitors.Visitor;
 import java.util.List;
 
-public class RecordComponentNode extends AbstractTreeNode {
+public class RecordComponentNode extends AbstractTreeNode implements RecordItemNode {
    public final List<String> names;
    public final TypeNode type;
    public final ExprNode init;

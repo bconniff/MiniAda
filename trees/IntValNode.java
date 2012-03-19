@@ -10,12 +10,8 @@ public class IntValNode extends AbstractTreeNode implements ValNode {
       val = n;
    }
 
-   public IntValNode(String s, boolean conv) {
-      val = (conv ? BaseConv.toLong(s) : Long.parseLong(s));
-   }
-
    public IntValNode(String s) {
-      this(s, false);
+      val = BaseConv.toLong(s);
    }
 
    public void accept(Visitor v) { v.visit(this); }

@@ -1,10 +1,12 @@
 package trees;
 
 import visitors.Visitor;
-public class RecordTypeNode extends AbstractTreeNode implements TypeNode {
-   public final RecordComponentListNode comps;
+import java.util.List;
 
-   public RecordTypeNode(RecordComponentListNode comps) {
+public class RecordTypeNode extends AbstractTreeNode implements TypeNode {
+   public final List<RecordItemNode> comps;
+
+   public RecordTypeNode(List<RecordItemNode> comps) {
       this.comps = comps;
    }
 

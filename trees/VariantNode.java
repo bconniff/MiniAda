@@ -3,7 +3,7 @@ package trees;
 import visitors.Visitor;
 import java.util.List;
 
-public class VariantNode extends AbstractTreeNode {
+public class VariantNode extends AbstractTreeNode implements RecordItemNode {
    public final String s;
    public final List<VariantChoiceNode> choices;
 

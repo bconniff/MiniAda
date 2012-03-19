@@ -1,6 +1,7 @@
 package trees;
 
 import visitors.Visitor;
+
 public class ExitStmtNode extends AbstractTreeNode implements StmtNode {
    public final String id;
    public final ExprNode expr;
