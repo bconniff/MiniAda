@@ -361,7 +361,9 @@ literal returns [ValNode value]
    | c=CHAR {value=new CharValNode($c.text);}
    | s=STR {value=new StrValNode($s.text);}
    | b=BOOL {value=new BoolValNode($b.text);}
-   | f=FLOAT {value=new FloatValNode($f.text);};
+   | f=FLOAT {value=new FloatValNode($f.text);}
+   | x=BASE_INT {value=new IntValNode($x.text, true);}
+   | y=BASE_FLOAT {value=new FloatValNode($y.text, true);};
 
 name_suffix returns [SuffixNode suff]
    : '.' s=designator {suff=new DotSuffixNode($s.text);}

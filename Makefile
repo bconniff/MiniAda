@@ -18,6 +18,7 @@ clean:
 	rm -f MiniAdaLexer.java MiniAdaParser.java MiniAda.tokens
 	rm -f *.class
 	rm -f trees/*.class
+	rm -f utils/*.class
 	rm -f visitors/*.class
 
 test: Test.class
