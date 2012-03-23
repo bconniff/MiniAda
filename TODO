@@ -1,0 +1,17 @@
+TODO
+
+- Class for symbol table
+   * What scheme to use for the table?
+   * Each symbol needs associated attributes
+
+- getChildren() method for AbstractTreeNodes
+   * Implement in each class, or with reflection?
+
+- Visitor to build symbol table (TopDeclVisitor)
+   * Uses TypeVisitor to populate the tree with types
+   * Enters symbols into table, handling scope
+   * Errors for duplicate definitions
+
+- Visitors to check types (TypeVisitor)
+   * Populates types between nodes
+   * Checks that types are valid
