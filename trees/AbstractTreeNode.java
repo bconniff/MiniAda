@@ -1,11 +1,13 @@
 package trees;
 
+import symbols.TypeDescriptor;
 import visitors.Visitor;
 import java.lang.reflect.*;
 import java.util.*;
 
 public abstract class AbstractTreeNode {
 	private static final HashSet<Class> BASIC;
+	public TypeDescriptor type;
 
 	//Builds a set of the primitive types
 	static {

@@ -81,6 +81,8 @@
       <delete verbose="true">
          <fileset file="*.class"/>
          <fileset file="trees/*.class"/>
+         <fileset file="symbols/*.class"/>
+         <fileset file="symbols/types/*.class"/>
          <fileset file="utils/*.class"/>
          <fileset file="visitors/*.class"/>
          <fileset file="MiniAda.tokens"/>

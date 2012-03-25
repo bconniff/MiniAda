@@ -147,16 +147,12 @@ access_type_def returns [AccessTypeNode type]
    | 'access' i=id {type=new AccessTypeNode($i.text);};
 
 record_type_def returns [RecordTypeNode type]
-   : 'record' c=component_list {type=new RecordTypeNode($c.comps);} 'end' 'record';
-
-non_variant_part returns [List<RecordComponentNode> comps]
-@init {comps=new ArrayList<RecordComponentNode>();}
-   : (c=component_decl {comps.add($c.comp);})+;
+   : 'record' c=component_list 'end' 'record' {type=new RecordTypeNode($c.comps);};
 
 component_list returns [List<RecordItemNode> comps]
 @init {comps=new ArrayList<RecordItemNode>();}
    : 'null' ';'
-   |  c=non_variant_part {comps.addAll($c.comps);} (v=variant_part {comps.add($v.value);})?;
+   |  (c=component_decl {comps.add($c.comp);})+ (v=variant_part {comps.add($v.value);})?;
 
 component_decl returns [RecordComponentNode comp]
    : {boolean i=false;} l=id_list ':' t=type_or_subtype (':=' e=expr {i=true;})? ';'
@@ -361,10 +357,10 @@ primary returns [ExprNode value]
    | '(' e=expr ')' {value=$e.value;};
 
 literal returns [ValNode value]
-   : i=INT {value=new IntValNode($i.text);}
-   | c=CHAR {value=new CharValNode($c.text);}
+   : c=CHAR {value=new CharValNode($c.text);}
    | s=STR {value=new StrValNode($s.text);}
    | b=BOOL {value=new BoolValNode($b.text);}
+   | i=INT {value=new IntValNode($i.text);}
    | f=FLOAT {value=new FloatValNode($f.text);}
    | x=BASE_INT {value=new IntValNode($x.text);}
    | y=BASE_FLOAT {value=new FloatValNode($y.text);};
@@ -424,8 +420,16 @@ INT: INT_NUM INT_EXP?;
 DOTDOT: '..';
 FLOAT: (INT_NUM '.' INT_NUM EXP?)=> INT_NUM '.' INT_NUM EXP? {$type=FLOAT;}
      | INT_NUM {$type=INT;};
-BASE_INT: i=INT_NUM '#' v=HEX_NUM {isValid($v.text,Integer.parseInt($i.text))}? '#' EXP?;
-BASE_FLOAT: i=INT_NUM '#' a=HEX_NUM '.' b=HEX_NUM {isValid($a.text+$b.text,Integer.parseInt($i.text))}? '#' EXP?;
+
+// enforce base is between 2 and 16, and that digits are valid for the base
+BASE_INT
+@init {int base=10;}
+   : i=INT_NUM {base=Integer.parseInt($i.text);} {2<=base&&base<=16}?
+      '#' v=HEX_NUM {isValid($v.text,base)}? '#' EXP?;
+BASE_FLOAT
+@init {int base=10;}
+   : i=INT_NUM {base=Integer.parseInt($i.text);} {2<=base&&base<=16}? 
+      '#' a=HEX_NUM '.' b=HEX_NUM {isValid($a.text+$b.text,base)}? '#' EXP?;
 
 // these get ignored
 COMMENT: '--' (options{greedy=false;}:.)* EOL {skip();};
