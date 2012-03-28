@@ -22,6 +22,34 @@ public abstract class AbstractTreeNode {
 	}
 
 	abstract public void accept(Visitor v);
+	
+	public List<AbstractTreeNode> getChildren() {
+		Field[] fields = getClass().getDeclaredFields();
+		List<AbstractTreeNode> toRet = new ArrayList<AbstractTreeNode>();
+		for(Field field : fields) {
+			try {
+				field.setAccessible(true);
+				Object obj = field.get(this);
+				if(obj != null) {
+					if(obj.getClass().isArray()) {
+						//Fill in later
+					} else if(obj instanceof Collection) {
+						Collection collect = (Collection) obj;
+						for(Object ele : collect) {
+							if(ele instanceof AbstractTreeNode) {
+								toRet.add((AbstractTreeNode)ele);
+							}
+						}
+					} else if(obj instanceof AbstractTreeNode) {
+						toRet.add((AbstractTreeNode)obj);
+					}
+				}
+			} catch(IllegalAccessException e) {
+				e.printStackTrace();
+			}
+		}
+		return toRet;
+	}
 
 	//Returns a JSON style string of the current object
 	public String toString() {
