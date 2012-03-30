@@ -1,5 +1,6 @@
 package trees;
 
+import symbols.SymbolAttributes;
 import symbols.TypeDescriptor;
 import visitors.Visitor;
 import java.lang.reflect.*;
@@ -7,7 +8,8 @@ import java.util.*;
 
 public abstract class AbstractTreeNode {
 	private static final HashSet<Class> BASIC;
-	public TypeDescriptor type;
+	//public TypeDescriptor symType = new ErrorType();
+	//public SymbolAttrbutes symAttr = new ErrorAttributes();
 
 	//Builds a set of the primitive types
 	static {
