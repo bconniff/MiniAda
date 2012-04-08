@@ -1,13 +1,12 @@
 package symbols.types;
 
-import symbols.TypeDescriptor;
-
 public class ArrayTypeDescriptor implements TypeDescriptor {
-   public final ArrayBounds bounds;
+   public final long upper, lower;
    public final TypeDescriptor elementType;
 
-   public ArrayTypeDescriptor(ArrayBounds b, TypeDescriptor t) {
-      bounds = b;
+   public ArrayTypeDescriptor(long upper, long lower, TypeDescriptor t) {
+      this.upper = upper;
+      this.lower = lower;
       elementType = t;
    }
 }

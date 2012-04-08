@@ -1,3 +1,3 @@
-package symbols;
+package symbols.types;
 
 public interface TypeDescriptor { }

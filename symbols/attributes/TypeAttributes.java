@@ -1,4 +1,6 @@
-package symbols;
+package symbols.attributes;
+
+import symbols.types.TypeDescriptor;
 
 public class TypeAttributes implements SymbolAttributes {
    public final TypeDescriptor thisType;

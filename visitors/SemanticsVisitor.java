@@ -2,6 +2,7 @@ package visitors;
 
 import symbols.*;
 import symbols.types.*;
+import symbols.attributes.*;
 import trees.*;
 
 public class SemanticsVisitor extends Visitor {

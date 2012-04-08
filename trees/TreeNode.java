@@ -1,7 +1,8 @@
 package trees;
 
 import visitors.Visitor;
-import symbols.*;
+import symbols.attributes.SymbolAttributes;
+import symbols.types.TypeDescriptor;
 
 public interface TreeNode {
    public void accept(Visitor v);

@@ -1,6 +1,5 @@
 package symbols.types;
 
-import symbols.TypeDescriptor;
 import symbols.SymbolTable;
 
 public class RecordTypeDescriptor implements TypeDescriptor {

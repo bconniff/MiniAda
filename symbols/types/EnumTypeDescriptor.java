@@ -1,12 +1,17 @@
 package symbols.types;
 
-import symbols.TypeDescriptor;
+import symbols.attributes.EnumAttributes;
 import java.util.List;
+import java.util.ArrayList;
 
 public class EnumTypeDescriptor implements TypeDescriptor {
-   public final List<EnumItem> items;
+   public final List<EnumAttributes> items;
 
-   public EnumTypeDescriptor(List<EnumItem> items) {
-      this.items = items;
+   public EnumTypeDescriptor() {
+      this.items = new ArrayList<EnumAttributes>();
+   }
+
+   public void add(EnumAttributes ea) {
+      items.add(ea);
    }
 }

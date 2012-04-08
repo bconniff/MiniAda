@@ -20,6 +20,7 @@ clean:
 	rm -f trees/*.class
 	rm -f symbols/*.class
 	rm -f symbols/types/*.class
+	rm -f symbols/attributes/*.class
 	rm -f utils/*.class
 	rm -f visitors/*.class
 

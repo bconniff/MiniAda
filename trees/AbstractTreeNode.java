@@ -1,6 +1,6 @@
 package trees;
 
-import symbols.*;
+import symbols.attributes.*;
 import symbols.types.*;
 import visitors.Visitor;
 import java.lang.reflect.*;

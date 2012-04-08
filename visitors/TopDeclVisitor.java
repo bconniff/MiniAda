@@ -3,6 +3,7 @@ package visitors;
 import trees.*;
 import symbols.*;
 import symbols.types.*;
+import symbols.attributes.*;
 
 public class TopDeclVisitor extends SemanticsVisitor {
    private final SymbolTable syms;
