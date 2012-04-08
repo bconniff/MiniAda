@@ -4,9 +4,9 @@ import visitors.Visitor;
 import java.util.List;
 
 public class EnumTypeNode extends AbstractTreeNode implements TypeNode {
-   public final List<String> names;
+   public final List<IdNode> names;
 
-   public EnumTypeNode(List<String> names) {
+   public EnumTypeNode(List<IdNode> names) {
       this.names = names;
    }
 

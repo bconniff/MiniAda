@@ -5,40 +5,40 @@ import visitors.Visitor;
 public class RangeNode extends AbstractTreeNode {
    public final ExprNode a;
    public final ExprNode b;
-   public final String name;
+   public final IdNode id;
+   public final NameNode name;
    public final RangeConstraintNode con;
-   public final AttrNode attr;
 
    public RangeNode(ExprNode a, ExprNode b) {
       this.a = a;
       this.b = b;
       name = null;
+      id = null;
       con = null;
-      attr = null;
    }
 
-   public RangeNode(String s) {
+   public RangeNode(NameNode n) {
       a = null;
       b = null;
-      name = s;
+      name = n;
+      id = null;
       con = null;
-      attr = null;
    }
 
-   public RangeNode(String s, RangeConstraintNode r) {
-      a = null;
-      b = null;
-      name = s;
-      con = r;
-      attr = null;
-   }
-
-   public RangeNode(AttrNode attr) {
+   public RangeNode(IdNode s) {
       a = null;
       b = null;
       name = null;
+      id = s;
       con = null;
-      this.attr = attr;
+   }
+
+   public RangeNode(IdNode s, RangeConstraintNode r) {
+      a = null;
+      b = null;
+      name = null;
+      id = s;
+      con = r;
    }
 
    public void accept(Visitor v) { v.visit(this); }

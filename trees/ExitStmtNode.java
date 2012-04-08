@@ -3,15 +3,15 @@ package trees;
 import visitors.Visitor;
 
 public class ExitStmtNode extends AbstractTreeNode implements StmtNode {
-   public final String id;
+   public final IdNode id;
    public final ExprNode expr;
 
-   public ExitStmtNode(String i, ExprNode e) {
+   public ExitStmtNode(IdNode i, ExprNode e) {
       id = i;
       expr = e;
    }
 
-   public ExitStmtNode(String i) {
+   public ExitStmtNode(IdNode i) {
       this(i, new BoolValNode(true));
    }
 

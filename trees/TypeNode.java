@@ -1,3 +1,3 @@
 package trees;
 
-public interface TypeNode { }
+public interface TypeNode extends TreeNode { }

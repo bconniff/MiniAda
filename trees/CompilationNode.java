@@ -1,3 +1,3 @@
 package trees;
 
-public interface CompilationNode { }
+public interface CompilationNode extends TreeNode { }

@@ -2,70 +2,43 @@ package symbols;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 public class SymbolTable {
-   private final static int BUF_SIZE = 64;
-   private final static int BUF_FACT = 2;
-   private Map<String,Symbol>[] table;
-   private int size = 0;
+   private LinkedList<Map<String,SymbolAttributes>> table;
 
-   public class ScopeUnderflowException extends Exception { }
-   public class RedefinitionException extends Exception { }
-
-   @SuppressWarnings("unchecked")
    public SymbolTable() {
-      table = new Map[BUF_SIZE];
+      table = new LinkedList<Map<String,SymbolAttributes>>();
 
       push();
    }
 
-   @SuppressWarnings("unchecked")
    public void push() {
-      if (size == table.length) {
-         Map<String,Symbol>[] tmp = new Map[table.length*BUF_FACT];
-         for (int i = 0; i < table.length; i++)
-            tmp[i] = table[i];
-         table = tmp;
-      }
-
-      table[size++] = new HashMap<String,Symbol>();
+      table.addFirst(new HashMap<String,SymbolAttributes>());
    }
 
-   public void pop()
-   throws ScopeUnderflowException {
-      if (size > 1)
-         table[--size] = null;
-      else throw new ScopeUnderflowException();
+   public void pop() {
+      table.removeFirst();
    }
 
-   public void add(String name, Symbol val)
-   throws RedefinitionException {
-      if (!isLocal(name))
-         table[size-1].put(name, val);
-      else throw new RedefinitionException();
+   public void add(String name, SymbolAttributes val) {
+      table.getFirst().put(name, val);
    }
 
    public boolean isLocal(String name) {
-      return table[size-1].containsKey(name);
+      return table.getFirst().containsKey(name);
    }
 
-   public Symbol get(String name) {
-      for (int i = size - 1; i >= 0; i--) {
-         Symbol tmp = table[i].get(name);
+   public boolean isAssignable(String name) {
+      return true; // XXX
+   }
+
+   public SymbolAttributes get(String name) {
+      for (Map<String,SymbolAttributes> m : table) {
+         final SymbolAttributes tmp = m.get(name);
          if (tmp != null)
             return tmp;
       }
       return null;
-   }
-
-   public String toString() {
-      String result = "";
-
-      for (int i = 0; i < 0; i++) {
-         result += "Scope #" + i + "\n";
-         result += table[i].toString() + "\n";
-      }
-
-      return result;
    }
 }

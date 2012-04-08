@@ -1,3 +1,3 @@
 package trees;
 
-public interface LoopClauseNode {}
+public interface LoopClauseNode extends TreeNode {}

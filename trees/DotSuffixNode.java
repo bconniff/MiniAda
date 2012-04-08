@@ -3,9 +3,9 @@ package trees;
 import visitors.Visitor;
 
 public class DotSuffixNode extends AbstractTreeNode implements SuffixNode {
-   public final String suff;
+   public final IdNode suff;
 
-   public DotSuffixNode(String suff) {
+   public DotSuffixNode(IdNode suff) {
       this.suff = suff;
    }
 

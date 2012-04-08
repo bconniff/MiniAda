@@ -4,10 +4,10 @@ import visitors.Visitor;
 import java.util.List;
 
 public class VariantNode extends AbstractTreeNode implements RecordItemNode {
-   public final String s;
+   public final IdNode s;
    public final List<VariantChoiceNode> choices;
 
-   public VariantNode(String s, List<VariantChoiceNode> choices) {
+   public VariantNode(IdNode s, List<VariantChoiceNode> choices) {
       this.s = s;
       this.choices = choices;
    }

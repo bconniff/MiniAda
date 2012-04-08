@@ -1,3 +1,3 @@
 package trees;
 
-public interface RecordItemNode { }
+public interface RecordItemNode extends TreeNode { }

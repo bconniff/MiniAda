@@ -1,3 +1,3 @@
 package trees;
 
-public interface DirecNode { }
+public interface DirecNode extends TreeNode { }

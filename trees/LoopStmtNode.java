@@ -4,11 +4,11 @@ import visitors.Visitor;
 import java.util.List;
 
 public class LoopStmtNode extends AbstractTreeNode implements StmtNode {
-   public final String name;
+   public final IdNode name;
    public final LoopClauseNode loop;
    public final List<StmtNode> stmts;
 
-   public LoopStmtNode(String n, LoopClauseNode l, List<StmtNode> s) {
+   public LoopStmtNode(IdNode n, LoopClauseNode l, List<StmtNode> s) {
       name = n;
       loop = l;
       stmts = s;

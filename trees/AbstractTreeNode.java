@@ -1,15 +1,15 @@
 package trees;
 
-import symbols.SymbolAttributes;
-import symbols.TypeDescriptor;
+import symbols.*;
+import symbols.types.*;
 import visitors.Visitor;
 import java.lang.reflect.*;
 import java.util.*;
 
-public abstract class AbstractTreeNode {
+public abstract class AbstractTreeNode implements TreeNode {
 	private static final HashSet<Class> BASIC;
-	//public TypeDescriptor symType = new ErrorType();
-	//public SymbolAttrbutes symAttr = new ErrorAttributes();
+	private TypeDescriptor symType = new ErrorType();
+	private SymbolAttributes symAttr = new ErrorAttributes();
 
 	//Builds a set of the primitive types
 	static {
@@ -24,6 +24,12 @@ public abstract class AbstractTreeNode {
 	}
 
 	abstract public void accept(Visitor v);
+
+	public TypeDescriptor getType() { return symType; }
+	public SymbolAttributes getAttr() { return symAttr; }
+
+	public void setType(TypeDescriptor t) { symType = t; }
+	public void setAttr(SymbolAttributes a) { symAttr = a; }
 	
 	public List<AbstractTreeNode> getChildren() {
 		Field[] fields = getClass().getDeclaredFields();

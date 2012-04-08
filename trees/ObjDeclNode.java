@@ -5,18 +5,18 @@ import java.util.List;
 
 public class ObjDeclNode extends AbstractTreeNode implements DeclNode {
    public final boolean con;
-   public final List<String> names;
+   public final List<IdNode> names;
    public final TypeNode type;
    public final ExprNode init;
 
-   public ObjDeclNode(boolean c, List<String> n, TypeNode t, ExprNode i) {
+   public ObjDeclNode(boolean c, List<IdNode> n, TypeNode t, ExprNode i) {
       con = c;
       names = n;
       type = t;
       init = i;
    }
 
-   public ObjDeclNode(boolean c, List<String> n, TypeNode t) {
+   public ObjDeclNode(boolean c, List<IdNode> n, TypeNode t) {
       this(c, n, t, null);
    }
 

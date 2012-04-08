@@ -4,15 +4,15 @@ import visitors.Visitor;
 import java.util.List;
 
 public class PragmaNode extends AbstractTreeNode implements DirecNode,StmtNode,DeclNode {
-   public final String name;
+   public final IdNode name;
    public final List<ArgNode> args;
 
-   public PragmaNode(String n, List<ArgNode> a) {
+   public PragmaNode(IdNode n, List<ArgNode> a) {
       name = n;
       args = a;
    }
 
-   public PragmaNode(String n) {
+   public PragmaNode(IdNode n) {
       this(n, null);
    }
 

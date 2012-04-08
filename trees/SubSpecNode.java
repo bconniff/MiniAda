@@ -1,3 +1,3 @@
 package trees;
 
-public interface SubSpecNode { }
+public interface SubSpecNode extends TreeNode { }

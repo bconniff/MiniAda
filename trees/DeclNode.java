@@ -1,3 +1,3 @@
 package trees;
 
-public interface DeclNode { }
+public interface DeclNode extends TreeNode { }

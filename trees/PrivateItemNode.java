@@ -3,10 +3,10 @@ package trees;
 import visitors.Visitor;
 
 public class PrivateItemNode extends AbstractTreeNode {
-   public final String name;
+   public final IdNode name;
    public final TypeNode type;
 
-   public PrivateItemNode(String name, TypeNode type) {
+   public PrivateItemNode(IdNode name, TypeNode type) {
       this.name = name;
       this.type = type;
    }

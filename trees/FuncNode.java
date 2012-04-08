@@ -4,11 +4,11 @@ import visitors.Visitor;
 import java.util.List;
 
 public class FuncNode extends AbstractTreeNode implements SubSpecNode {
-   public final String name;
+   public final IdNode name;
    public final List<ParamNode> params;
-   public final String ret;
+   public final IdNode ret;
 
-   public FuncNode(String name, List<ParamNode> params, String ret) {
+   public FuncNode(IdNode name, List<ParamNode> params, IdNode ret) {
       this.name = name;
       this.params = params;
       this.ret = ret;

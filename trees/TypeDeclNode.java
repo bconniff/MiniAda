@@ -3,10 +3,10 @@ package trees;
 import visitors.Visitor;
 
 public class TypeDeclNode extends AbstractTreeNode implements DeclNode {
-   public final String name;
+   public final IdNode name;
    public final TypeNode type;
 
-   public TypeDeclNode(String name, TypeNode type) {
+   public TypeDeclNode(IdNode name, TypeNode type) {
       this.name = name;
       this.type = type;
    }

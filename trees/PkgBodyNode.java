@@ -4,12 +4,12 @@ import visitors.Visitor;
 import java.util.List;
 
 public class PkgBodyNode extends AbstractTreeNode implements CompilationNode {
-   public final String name;
+   public final IdNode name;
    public final List<DeclNode> decls;
    public final List<StmtNode> stmts;
    public final List<ExceptionHandlerNode> exceps;
 
-   public PkgBodyNode(String n, List<DeclNode> d, List<StmtNode> s, List<ExceptionHandlerNode> e) {
+   public PkgBodyNode(IdNode n, List<DeclNode> d, List<StmtNode> s, List<ExceptionHandlerNode> e) {
       name = n;
       decls = d;
       stmts = s;

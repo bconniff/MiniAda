@@ -1,3 +1,3 @@
 package trees;
 
-public interface SuffixNode { }
+public interface SuffixNode extends TreeNode { }

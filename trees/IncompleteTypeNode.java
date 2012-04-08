@@ -3,9 +3,9 @@ package trees;
 import visitors.Visitor;
 
 public class IncompleteTypeNode extends AbstractTreeNode implements TypeNode {
-   public final String name;
+   public final IdNode name;
 
-   public IncompleteTypeNode(String name) {
+   public IncompleteTypeNode(IdNode name) {
       this.name = name;
    }
 

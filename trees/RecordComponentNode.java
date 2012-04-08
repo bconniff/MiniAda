@@ -4,17 +4,17 @@ import visitors.Visitor;
 import java.util.List;
 
 public class RecordComponentNode extends AbstractTreeNode implements RecordItemNode {
-   public final List<String> names;
+   public final List<IdNode> names;
    public final TypeNode type;
    public final ExprNode init;
 
-   public RecordComponentNode(List<String> n, TypeNode t, ExprNode i) {
+   public RecordComponentNode(List<IdNode> n, TypeNode t, ExprNode i) {
       names = n;
       type = t;
       init = i;
    }
 
-   public RecordComponentNode(List<String> n, TypeNode t) {
+   public RecordComponentNode(List<IdNode> n, TypeNode t) {
       this(n, t, null);
    }
 

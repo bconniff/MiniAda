@@ -4,7 +4,7 @@ import visitors.Visitor;
 import java.util.List;
 
 public class ParamNode extends AbstractTreeNode {
-   public final List<String> names;
+   public final List<IdNode> names;
    public final Mode m;
    public final TypeNode type;
 
@@ -12,7 +12,7 @@ public class ParamNode extends AbstractTreeNode {
       IN, OUT, IN_OUT;
    }
 
-   public ParamNode(List<String> names, Mode m, TypeNode type) {
+   public ParamNode(List<IdNode> names, Mode m, TypeNode type) {
       this.names = names;
       this.m = m;
       this.type = type;

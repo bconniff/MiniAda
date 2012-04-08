@@ -1,3 +1,3 @@
 package trees;
 
-public interface StmtNode { }
+public interface StmtNode extends TreeNode { }
