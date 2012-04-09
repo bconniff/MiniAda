@@ -1,6 +1,6 @@
 package symbols.types;
 
-public class ArrayTypeDescriptor implements TypeDescriptor {
+public class ArrayTypeDescriptor extends TypeDescriptor {
    public final long upper, lower;
    public final TypeDescriptor elementType;
 
@@ -8,5 +8,9 @@ public class ArrayTypeDescriptor implements TypeDescriptor {
       this.upper = upper;
       this.lower = lower;
       elementType = t;
+   }
+
+   public String toString() {
+      return "array ("+upper+" .. "+lower+") of "+elementType;
    }
 }

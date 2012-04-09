@@ -32,7 +32,7 @@ public class SemanticsVisitor extends Visitor {
 		if (bn.r.getType().equals(bn.l.getType())) // XXX
 			bn.setType(bn.r.getType());
 		else
-			error("Invalid types for binary operator");
+			error("Invalid types "+right.getType()+" and "+left.getType()+" for binary operator "+bn.binOp);
 	}
 
 	public void visit(IfClauseNode icn){
@@ -65,6 +65,10 @@ public class SemanticsVisitor extends Visitor {
 		ExprNode value = asn.expr;
 		name.accept(this);
 		value.accept(this);
+
+		if (!name.getType().isAssignable(value.getType())) {
+			error("Can't assign "+value.getType()+" to "+name.getType());
+		}
 	}
 
 	public void visit(NameNode nn){

@@ -25,8 +25,12 @@ public class TopDeclVisitor extends SemanticsVisitor {
    public void visit(ObjDeclNode n) {
       n.type.accept(new TypeVisitor(syms));
       
-      if (n.init != null)
+      if (n.init != null) {
          n.init.accept(this);
+         if (!n.type.getType().isAssignable(n.init.getType())) {
+            error("Can't assign "+n.init.getType()+" to "+n.type.getType());
+         }
+      }
 
       for (IdNode s: n.names) {
          if (syms.isLocal(s.id)) {

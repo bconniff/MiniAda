@@ -2,7 +2,7 @@ package symbols.types;
 
 import symbols.SymbolTable;
 
-public class RecordTypeDescriptor implements TypeDescriptor {
+public class RecordTypeDescriptor extends TypeDescriptor {
    public final SymbolTable fields;
 
    public RecordTypeDescriptor(SymbolTable f) {
