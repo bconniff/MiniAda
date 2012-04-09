@@ -15,5 +15,4 @@ public class ChoiceNode extends AbstractTreeNode {
       this(a, null);
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

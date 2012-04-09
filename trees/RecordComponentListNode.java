@@ -20,5 +20,4 @@ public class RecordComponentListNode extends AbstractTreeNode {
       this(null, null);
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

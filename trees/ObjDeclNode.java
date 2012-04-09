@@ -20,5 +20,4 @@ public class ObjDeclNode extends AbstractTreeNode implements DeclNode {
       this(c, n, t, null);
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

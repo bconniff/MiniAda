@@ -16,5 +16,4 @@ public class WhenNode extends AbstractTreeNode {
       this(null, s);
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

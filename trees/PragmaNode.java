@@ -16,5 +16,4 @@ public class PragmaNode extends AbstractTreeNode implements DirecNode,StmtNode,D
       this(n, null);
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

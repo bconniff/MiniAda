@@ -23,7 +23,16 @@ public abstract class AbstractTreeNode implements TreeNode {
 		BASIC.add(Character.class);
 	}
 
-	abstract public void accept(Visitor v);
+	public void accept(Visitor v) {
+		try {
+			v.getClass().getMethod("visit", new Class[]{ this.getClass() }).invoke(v, this);
+		} catch (Exception e) {
+			System.err.println("No such method "+v.getClass().getSimpleName()+".visit("+this.getClass().getSimpleName()+")");
+			for (AbstractTreeNode n: getChildren()) {
+				n.accept(v);
+			}
+		}
+	}
 
 	public TypeDescriptor getType() { return symType; }
 	public SymbolAttributes getAttr() { return symAttr; }
@@ -107,11 +116,28 @@ public abstract class AbstractTreeNode implements TreeNode {
 						//Default object behavior, print out the object with brackets around it
 						} else {
 							toRet.append("{");
+
+							if(obj instanceof AbstractTreeNode) {
+								final AbstractTreeNode a = (AbstractTreeNode)obj;
+
+								if(!(a.getType() instanceof ErrorType)) {
+									toRet.append("TYPE : " + ((AbstractTreeNode)obj).getType().getClass().getSimpleName() + ", ");
+								}
+
+								if(!(a.getAttr() instanceof ErrorAttributes)) {
+									toRet.append("ATTR : " + ((AbstractTreeNode)obj).getAttr().getClass().getSimpleName() + ", ");
+								}
+							}
+
 							toRet.append(obj.toString());
 							toRet.append("}");
 						}
 					}
 					toRet.append(", ");
+				} else {
+					toRet.append(field.getName());
+					toRet.append(" : ");
+					toRet.append("null, ");
 				}
 			} catch(IllegalAccessException e) {
 				e.printStackTrace();

@@ -10,5 +10,4 @@ public class RecordTypeNode extends AbstractTreeNode implements TypeNode {
       this.comps = comps;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

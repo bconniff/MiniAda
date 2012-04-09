@@ -24,6 +24,7 @@
             <pathelement location="${antlr.jar}"/>
          </classpath>
          <include name="MiniAdaParser.java"/>
+         <include name="Main.java"/>
       </javac>
    </target>
 

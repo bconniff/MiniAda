@@ -14,5 +14,4 @@ public class PkgSpecNode extends AbstractTreeNode implements CompilationNode {
       items = i;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

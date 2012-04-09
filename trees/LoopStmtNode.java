@@ -22,5 +22,4 @@ public class LoopStmtNode extends AbstractTreeNode implements StmtNode {
       this(null, new WhileClauseNode(new BoolValNode(true)), s);
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

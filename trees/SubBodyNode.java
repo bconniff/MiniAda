@@ -14,5 +14,4 @@ public class SubBodyNode extends AbstractTreeNode {
       exceps = e;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

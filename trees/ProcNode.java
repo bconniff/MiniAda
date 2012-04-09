@@ -12,5 +12,4 @@ public class ProcNode extends AbstractTreeNode implements SubSpecNode {
       this.params = params;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

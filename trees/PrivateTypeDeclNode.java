@@ -9,5 +9,4 @@ public class PrivateTypeDeclNode extends AbstractTreeNode implements DeclNode {
       this.name = name;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

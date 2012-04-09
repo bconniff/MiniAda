@@ -14,5 +14,4 @@ public class FuncNode extends AbstractTreeNode implements SubSpecNode {
       this.ret = ret;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

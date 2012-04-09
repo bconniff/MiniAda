@@ -15,5 +15,4 @@ public class UnaryNode extends AbstractTreeNode implements ExprNode {
       expr = e;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

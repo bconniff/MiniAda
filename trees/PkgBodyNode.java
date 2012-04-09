@@ -16,5 +16,4 @@ public class PkgBodyNode extends AbstractTreeNode implements CompilationNode {
       exceps = e;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

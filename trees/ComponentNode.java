@@ -16,5 +16,4 @@ public class ComponentNode extends AbstractTreeNode {
       expr = e;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

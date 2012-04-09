@@ -24,6 +24,9 @@ public class TopDeclVisitor extends SemanticsVisitor {
    // Declaration Nodes
    public void visit(ObjDeclNode n) {
       n.type.accept(new TypeVisitor(syms));
+      
+      if (n.init != null)
+         n.init.accept(this);
 
       for (IdNode s: n.names) {
          if (syms.isLocal(s.id)) {
@@ -71,6 +74,10 @@ public class TopDeclVisitor extends SemanticsVisitor {
       syms.push();
       n.body.accept(this);
       syms.pop();
+   }
+
+   public void visit(SubBodyNode n) {
+      visitChildren(n);
    }
 
    public void visit(SubtypeDeclNode n) {

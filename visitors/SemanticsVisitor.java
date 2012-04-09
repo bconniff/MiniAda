@@ -17,6 +17,12 @@ public class SemanticsVisitor extends Visitor {
 	}
 
 
+	public void visit(MiniAdaTree n) { visitChildren(n); }
+
+	public void visit(SubDeclNode n) {
+		n.accept(new TopDeclVisitor(syms));
+	}
+
 	public void visit(BinNode bn){
 		ExprNode right = bn.r;
 		ExprNode left = bn.l;
@@ -80,8 +86,8 @@ public class SemanticsVisitor extends Visitor {
 		if (lower != null && upper != null) {
 			lower.accept(this);
 			upper.accept(this);
-		} else if (con != null) {
-			con.accept(this);
+		} else {
+			error("Only integer ranges are supported so far");
 		}
 	}
 
@@ -111,6 +117,43 @@ public class SemanticsVisitor extends Visitor {
 		ExprNode expr = un.expr;
 		expr.accept(this);
 	}
+
+	public void visit(StrValNode i) {
+		final TypeDescriptor td = new StringTypeDescriptor();
+		i.setType(td);
+		i.setAttr(new TypeAttributes(td));
+	}
+
+	public void visit(CharValNode i) {
+		final TypeDescriptor td = new CharacterTypeDescriptor();
+		i.setType(td);
+		i.setAttr(new TypeAttributes(td));
+	}
+
+	public void visit(BoolValNode i) {
+		final TypeDescriptor td = new BooleanTypeDescriptor();
+		i.setType(td);
+		i.setAttr(new TypeAttributes(td));
+	}
+
+	public void visit(IntValNode i) {
+		final TypeDescriptor td = new IntegerTypeDescriptor();
+		i.setType(td);
+		i.setAttr(new TypeAttributes(td));
+	}
+
+	public void visit(FloatValNode i) {
+		final TypeDescriptor td = new FloatTypeDescriptor();
+		i.setType(td);
+		i.setAttr(new TypeAttributes(td));
+	}
+
+	public void visit(ObjDeclNode o) {
+		System.out.println("visiting object");
+		o.accept(new TopDeclVisitor(syms));
+	}
+
+	public void visit(NullStmtNode n) { }
 
    // XXX
 	public void visit(AllSuffixNode sn){ }

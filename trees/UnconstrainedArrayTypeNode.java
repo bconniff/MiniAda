@@ -12,5 +12,4 @@ public class UnconstrainedArrayTypeNode extends AbstractTreeNode implements Arra
       this.type = type;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

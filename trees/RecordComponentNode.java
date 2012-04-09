@@ -18,5 +18,4 @@ public class RecordComponentNode extends AbstractTreeNode implements RecordItemN
       this(n, t, null);
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

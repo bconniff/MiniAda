@@ -16,5 +16,4 @@ public class SubDeclNode extends AbstractTreeNode implements DeclNode,Compilatio
       this(s, null);
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

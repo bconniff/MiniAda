@@ -12,5 +12,4 @@ public class VariantChoiceNode extends AbstractTreeNode {
       comps = c;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

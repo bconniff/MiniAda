@@ -9,5 +9,4 @@ public class RaiseStmtNode extends AbstractTreeNode implements StmtNode {
       this.excep = excep;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

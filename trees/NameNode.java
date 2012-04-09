@@ -16,5 +16,4 @@ public class NameNode extends AbstractTreeNode implements ExprNode {
       this(n, null);
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

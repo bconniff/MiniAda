@@ -16,5 +16,4 @@ public class IfClauseNode extends AbstractTreeNode {
       this(new BoolValNode(true), s);
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

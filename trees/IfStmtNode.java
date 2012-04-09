@@ -10,5 +10,4 @@ public class IfStmtNode extends AbstractTreeNode implements StmtNode {
       clauses = i;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

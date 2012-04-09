@@ -20,5 +20,4 @@ public class BlockStmtNode extends AbstractTreeNode implements StmtNode {
       this(null, d, s, e);
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

@@ -9,5 +9,4 @@ public class DotSuffixNode extends AbstractTreeNode implements SuffixNode {
       this.suff = suff;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

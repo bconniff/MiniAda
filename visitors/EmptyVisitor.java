@@ -6,8 +6,10 @@ public class EmptyVisitor extends Visitor {
    public EmptyVisitor() { }
 
    public void visitChildren(AbstractTreeNode n) {
-      for (AbstractTreeNode child: n.getChildren())
-         visit(child);
+      for (AbstractTreeNode child: n.getChildren()) {
+         System.out.println("Visiting: " + child);
+         child.accept(this);
+      }
    }
 
    public void visit(AccessTypeNode n) { visitChildren(n); }

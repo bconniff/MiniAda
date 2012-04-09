@@ -11,5 +11,4 @@ public class PrivateItemNode extends AbstractTreeNode {
       this.type = type;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

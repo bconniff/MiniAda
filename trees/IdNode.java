@@ -10,5 +10,4 @@ public class IdNode extends AbstractTreeNode implements ExprNode {
       id = n;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

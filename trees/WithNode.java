@@ -10,5 +10,4 @@ public class WithNode extends AbstractTreeNode implements DirecNode {
       libs = l;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

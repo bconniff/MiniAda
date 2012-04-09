@@ -15,5 +15,4 @@ public class ArgNode extends AbstractTreeNode {
       this(null, expr);
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

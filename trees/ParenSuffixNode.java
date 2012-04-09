@@ -10,5 +10,4 @@ public class ParenSuffixNode extends AbstractTreeNode implements SuffixNode {
       this.exprs = exprs;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

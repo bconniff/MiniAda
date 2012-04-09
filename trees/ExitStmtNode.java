@@ -23,5 +23,4 @@ public class ExitStmtNode extends AbstractTreeNode implements StmtNode {
       this(null, new BoolValNode(true));
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

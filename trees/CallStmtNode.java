@@ -9,5 +9,4 @@ public class CallStmtNode extends AbstractTreeNode implements StmtNode {
       this.name = name;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

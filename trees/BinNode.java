@@ -17,5 +17,4 @@ public class BinNode extends AbstractTreeNode implements ExprNode{
       this.l = l;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

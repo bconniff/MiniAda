@@ -26,5 +26,4 @@ public class SubtypeNode extends AbstractTreeNode implements TypeNode {
       ranges = null;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

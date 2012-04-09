@@ -14,5 +14,4 @@ public class IntValNode extends AbstractTreeNode implements ValNode {
       val = BaseConv.toLong(s);
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

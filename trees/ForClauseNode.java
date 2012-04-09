@@ -13,5 +13,4 @@ public class ForClauseNode extends AbstractTreeNode implements LoopClauseNode {
       this.reverse = reverse;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

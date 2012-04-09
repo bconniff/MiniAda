@@ -18,5 +18,4 @@ public class StrValNode extends AbstractTreeNode implements ValNode {
       val = tmp;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

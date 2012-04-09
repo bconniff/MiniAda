@@ -9,5 +9,4 @@ public class CharValNode extends AbstractTreeNode implements ValNode {
       val = s.charAt(1);
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

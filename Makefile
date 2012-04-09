@@ -11,7 +11,7 @@ ANTLR=/usr/share/java/antlrworks.jar
 
 JARGS=-cp ".:$(ANTLR)"
 
-all: MiniAdaParser.class
+all: Main.class
 debug: Test.class TestAST.class
 
 clean:
@@ -29,6 +29,9 @@ test: Test.class
 
 test-ast: TestAST.class
 	java $(JARGS) TestAST tests/*.adb
+
+Main.class: MiniAdaParser.class
+	javac $(JARGS) Main.java
 
 debug-MiniAdaParser.java: MiniAda.g
 	java $(JARGS) org.antlr.Tool -debug MiniAda.g

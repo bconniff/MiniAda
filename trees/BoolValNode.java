@@ -13,5 +13,4 @@ public class BoolValNode extends AbstractTreeNode implements ValNode {
       val = b;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

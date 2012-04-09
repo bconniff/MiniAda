@@ -12,5 +12,4 @@ public class AggNode extends AbstractTreeNode implements ExprNode {
       this.comps = comps;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

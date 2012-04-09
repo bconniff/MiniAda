@@ -10,5 +10,4 @@ public class UseNode extends AbstractTreeNode implements DirecNode,DeclNode {
       libs = l;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

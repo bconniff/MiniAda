@@ -13,5 +13,4 @@ public class ReturnStmtNode extends AbstractTreeNode implements StmtNode {
       this.expr = expr;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

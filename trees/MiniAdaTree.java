@@ -11,6 +11,4 @@ public class MiniAdaTree extends AbstractTreeNode {
       direcs = d;
       comps = c;
    }
-
-   public void accept(Visitor v) { v.visit(this); }
 }

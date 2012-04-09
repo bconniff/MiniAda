@@ -12,5 +12,4 @@ public class ConstrainedArrayTypeNode extends AbstractTreeNode implements ArrayT
       this.type = type;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

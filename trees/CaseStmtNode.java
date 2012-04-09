@@ -12,5 +12,4 @@ public class CaseStmtNode extends AbstractTreeNode implements StmtNode {
       whens = w;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

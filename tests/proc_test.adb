@@ -13,3 +13,8 @@ begin
       Put(x);
    end loop;
 end Proc_Test;
+
+procedure Proc_Test is
+begin
+   null;
+end Proc_Test;

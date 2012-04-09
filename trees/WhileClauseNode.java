@@ -9,5 +9,4 @@ public class WhileClauseNode extends AbstractTreeNode implements LoopClauseNode 
       this.expr = expr;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

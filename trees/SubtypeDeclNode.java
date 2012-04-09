@@ -11,5 +11,4 @@ public class SubtypeDeclNode extends AbstractTreeNode implements DeclNode {
       this.type = type;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

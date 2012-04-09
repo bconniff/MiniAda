@@ -10,5 +10,4 @@ public class EnumTypeNode extends AbstractTreeNode implements TypeNode {
       this.names = names;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

@@ -41,5 +41,4 @@ public class RangeNode extends AbstractTreeNode {
       con = r;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

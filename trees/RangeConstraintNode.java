@@ -13,5 +13,4 @@ public class RangeConstraintNode extends AbstractTreeNode {
       this.range = range;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

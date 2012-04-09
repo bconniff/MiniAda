@@ -14,5 +14,4 @@ public class FloatValNode extends AbstractTreeNode implements ValNode {
       val = BaseConv.toDouble(s);
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

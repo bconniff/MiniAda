@@ -10,5 +10,4 @@ public class ExceptionDeclNode extends AbstractTreeNode implements DeclNode {
       this.names = names;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }

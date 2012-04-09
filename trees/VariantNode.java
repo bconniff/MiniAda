@@ -12,5 +12,4 @@ public class VariantNode extends AbstractTreeNode implements RecordItemNode {
       this.choices = choices;
    }
 
-   public void accept(Visitor v) { v.visit(this); }
 }
