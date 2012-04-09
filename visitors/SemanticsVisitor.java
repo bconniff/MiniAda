@@ -13,7 +13,7 @@ public class SemanticsVisitor extends Visitor {
 
 	public void visitChildren(AbstractTreeNode n) {
 		for (AbstractTreeNode child: n.getChildren())
-			visit(child);
+			child.accept(this);
 	}
 
 
@@ -22,6 +22,11 @@ public class SemanticsVisitor extends Visitor {
 		ExprNode left = bn.l;
 		right.accept(this);
 		left.accept(this);
+
+		if (bn.r.getType().equals(bn.l.getType())) // XXX
+			bn.setType(bn.r.getType());
+		else
+			error("Invalid types for binary operator");
 	}
 
 	public void visit(IfClauseNode icn){
@@ -31,16 +36,14 @@ public class SemanticsVisitor extends Visitor {
 			stmt.accept(this);
 		}
 
+		if (!(condition.getType() instanceof BooleanTypeDescriptor))
+			error("Expected boolean condition in if clause");
 	}
 
 	public void visit(IfStmtNode isn){
 		for(IfClauseNode clause : isn.clauses) {
 			clause.accept(this);
 		}
-	}
-
-	public void visit(LoopClauseNode lcn){
-
 	}
 
 	public void visit(LoopStmtNode lsn){
@@ -64,10 +67,6 @@ public class SemanticsVisitor extends Visitor {
 		}
 	}
 
-	public void visit(SuffixNode sn){
-
-	}
-
 	public void visit(ForClauseNode fcn){
 		RangeNode range = fcn.r;
 		range.accept(this);
@@ -79,11 +78,11 @@ public class SemanticsVisitor extends Visitor {
 		RangeConstraintNode con = rn.con;
 
 		if (lower != null && upper != null) {
-         lower.accept(this);
-         upper.accept(this);
-      } else if (con != null) {
-         con.accept(this);
-      }
+			lower.accept(this);
+			upper.accept(this);
+		} else if (con != null) {
+			con.accept(this);
+		}
 	}
 
 	public void visit(RangeConstraintNode rcn){
@@ -92,31 +91,32 @@ public class SemanticsVisitor extends Visitor {
 	}
 
 	public void visit(FuncNode fn){
-		for(ParamNode param : fn.params) {
-			param.accept(this);
-		}
+      fn.accept(new TopDeclVisitor(syms));
 	}
 
 	public void visit(ParamNode pn){
-		TypeNode type = pn.type;
-		type.accept(this);
-	}
-
-	public void visit(StmtNode sn){
-
-	}
-
-	public void visit(TypeNode tn){
-
+		pn.accept(new TopDeclVisitor(syms));
 	}
 
 	public void visit(WhileClauseNode wcn){
 		ExprNode condition = wcn.expr;
 		condition.accept(this);
+
+		if (!(condition.getType() instanceof BooleanTypeDescriptor)) {
+			error("Expected boolean condition in while clause");
+		}
 	}
 
 	public void visit(UnaryNode un){
 		ExprNode expr = un.expr;
 		expr.accept(this);
 	}
+
+   // XXX
+	public void visit(AllSuffixNode sn){ }
+	public void visit(AttrSuffixNode sn){ }
+	public void visit(DotSuffixNode sn){ }
+	public void visit(ParenSuffixNode sn){ }
 }
+
+// vim: noet

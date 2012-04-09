@@ -2,6 +2,9 @@ import org.antlr.runtime.*;
 import org.antlr.runtime.tree.Tree;
 import org.antlr.runtime.debug.ParseTreeBuilder;
 
+import visitors.*;
+import trees.*;
+
 public class TestAST {
    public static void main(String[] args) throws Exception {
       if (args.length < 1) {
@@ -19,7 +22,9 @@ public class TestAST {
          MiniAdaParser parse = new MiniAdaParser(tokens, builder);
          
          try {
-            System.out.println(parse.compilation());
+            AbstractTreeNode tree = parse.compilation(); 
+            tree.accept(new EmptyVisitor());
+            System.out.println(tree);
          } catch (RecognitionException e) {
             e.printStackTrace();
             return;

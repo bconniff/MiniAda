@@ -230,7 +230,7 @@ subprogram_decl returns [SubDeclNode value]
    : s=subprogram_spec ';' {value=new SubDeclNode($s.spec);};
 subprogram_spec returns [SubSpecNode spec]
    : 'procedure' i=id p=formal_part {spec=new ProcNode($i.value,$p.params);}
-   | 'function' d=designator p=formal_part 'return' i=id {spec=new FuncNode($d.value,$p.params,$i.value);};
+   | 'function' d=designator p=formal_part 'return' i=id {spec=new FuncNode($d.value,$p.params,new IdTypeNode($i.value));};
 
 designator returns [IdNode value]
    : i=id {value=$i.value;}

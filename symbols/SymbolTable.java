@@ -1,6 +1,7 @@
 package symbols;
 
 import symbols.attributes.SymbolAttributes;
+import trees.IdNode;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -29,6 +30,10 @@ public class SymbolTable {
 
    public boolean isLocal(String name) {
       return table.getFirst().containsKey(name);
+   }
+
+   public boolean isLocal(IdNode id) {
+      return isLocal(id.id);
    }
 
    public boolean isAssignable(String name) {

@@ -5,6 +5,8 @@ import symbols.*;
 import symbols.types.*;
 import symbols.attributes.*;
 
+import java.util.TreeMap;
+
 public class TypeVisitor extends TopDeclVisitor {
    private final SymbolTable syms;
 
@@ -104,5 +106,57 @@ public class TypeVisitor extends TopDeclVisitor {
 
    public void visit(RecordTypeNode n) {
       error("Records are not supported (yet)");
+   }
+
+   public void visit(ProcNode n) {
+      TreeMap<String,SymbolAttributes> map = new TreeMap<String,SymbolAttributes>();
+      for (ParamNode p: n.params) {
+         p.type.accept(this);
+
+         for (IdNode id: p.names) {
+            if (map.containsKey(id.id))
+               error("Duplicate parameter " + id.id);
+            else
+               map.put(id.id, p.type.getAttr());
+         }
+      }
+
+      final TypeDescriptor td = new ProcTypeDescriptor(map, n.name.id);
+      final SymbolAttributes a = new TypeAttributes(td);
+
+      n.setType(td);
+      n.setAttr(a);
+
+      if (syms.isLocal(n.name.id))
+         error("Name is already defined: "+n.name.id);
+      else
+         syms.add(n.name.id, a);
+   }
+
+   public void visit(FuncNode n) {
+      TreeMap<String,SymbolAttributes> map = new TreeMap<String,SymbolAttributes>();
+      for (ParamNode p: n.params) {
+         p.type.accept(this);
+
+         for (IdNode id: p.names) {
+            if (map.containsKey(id.id))
+               error("Duplicate parameter " + id.id);
+            else
+               map.put(id.id, p.type.getAttr());
+         }
+      }
+
+      n.ret.accept(this);
+
+      final TypeDescriptor td = new FuncTypeDescriptor(map, n.name.id, n.ret.getAttr());
+      final SymbolAttributes a = new TypeAttributes(td);
+
+      n.setType(td);
+      n.setAttr(a);
+
+      if (syms.isLocal(n.name.id))
+         error("Name is already defined: "+n.name.id);
+      else
+         syms.add(n.name.id, a);
    }
 }

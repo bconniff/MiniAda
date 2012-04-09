@@ -18,7 +18,7 @@ public class TopDeclVisitor extends SemanticsVisitor {
 
    public void visitChildren(AbstractTreeNode n) {
       for (AbstractTreeNode child: n.getChildren())
-         visit(child);
+         child.accept(this);
    }
 
    // Declaration Nodes
@@ -67,7 +67,10 @@ public class TopDeclVisitor extends SemanticsVisitor {
    
    public void visit(SubDeclNode n) {
       n.spec.accept(new TypeVisitor(syms));
+
+      syms.push();
       n.body.accept(this);
+      syms.pop();
    }
 
    public void visit(SubtypeDeclNode n) {
