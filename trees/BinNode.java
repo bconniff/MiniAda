@@ -8,7 +8,7 @@ public class BinNode extends AbstractTreeNode implements ExprNode{
    public final ExprNode l;
 
    public static enum Op {
-      AND, OR, AND_THEN, OR_ELSE, EQ, LT, GT, LE, NE, GE, PLUS, MINUS, AMP, MULT, DIV, MOD, POW;
+      AND, OR, XOR, AND_THEN, OR_ELSE, EQ, LT, GT, LE, NE, GE, PLUS, MINUS, AMP, MULT, DIV, MOD, REM, POW;
    }
 
    public BinNode(Op binOp, ExprNode r, ExprNode l) {

@@ -8,5 +8,4 @@ public class CallStmtNode extends AbstractTreeNode implements StmtNode {
    public CallStmtNode(NameNode name) {
       this.name = name;
    }
-
 }

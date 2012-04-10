@@ -6,21 +6,40 @@ import symbols.attributes.*;
 import trees.*;
 
 public class SemanticsVisitor extends Visitor {
-	private final SymbolTable syms;
+	protected final SymbolTable syms;
 
 	public SemanticsVisitor(SymbolTable syms) { this.syms = syms; }
-	public SemanticsVisitor() { this(new SymbolTable()); }
 
 	public void visitChildren(AbstractTreeNode n) {
 		for (AbstractTreeNode child: n.getChildren())
 			child.accept(this);
 	}
 
-
 	public void visit(MiniAdaTree n) { visitChildren(n); }
 
-	public void visit(SubDeclNode n) {
-		n.accept(new TopDeclVisitor(syms));
+	public void visit(CallStmtNode n) {
+		error("Subprogram calls aren't supported (yet)");
+	}
+
+	public void visit(WithNode n) {
+		error("With is not supported (yet)");
+	}
+
+	public void visit(UseNode n) {
+		error("Use is not supported (yet)");
+	}
+
+	public void visit(IdNode n) {
+		SymbolAttributes a = syms.get(n.id);
+
+		if (a == null) {
+			error("Name "+n.id+" is not defined");
+		} else if (a instanceof VariableAttributes) {
+			n.setType(((VariableAttributes)a).variableType);
+			n.setAttr(a);
+		} else {
+			error("Name "+n.id+" is not a variable");
+		}
 	}
 
 	public void visit(BinNode bn){
@@ -29,8 +48,49 @@ public class SemanticsVisitor extends Visitor {
 		right.accept(this);
 		left.accept(this);
 
-		if (bn.r.getType().equals(bn.l.getType())) // XXX
-			bn.setType(bn.r.getType());
+		TypeDescriptor td = new ErrorTypeDescriptor();
+
+		switch (bn.binOp) {
+			case AND:
+			case AND_THEN:
+			case OR:
+			case OR_ELSE:
+			case XOR:
+				td = Operators.boolOp(left.getType(), right.getType());
+				break;
+
+			case EQ:
+			case NE:
+				td = Operators.equalOp(left.getType(), right.getType());
+				break;
+
+			case LT:
+			case LE:
+			case GT:
+			case GE:
+				td = Operators.compOp(left.getType(), right.getType());
+				break;
+
+			case PLUS:
+			case MINUS:
+			case MULT:
+			case DIV:
+			case POW:
+				td = Operators.arithOp(left.getType(), right.getType());
+				break;
+
+			case MOD:
+			case REM:
+				td = Operators.modOp(left.getType(), right.getType());
+				break;
+
+			case AMP:
+				td = Operators.concatOp(left.getType(), right.getType());
+				break;
+		}
+
+		if (!td.isError())
+			bn.setType(td);
 		else
 			error("Invalid types "+right.getType()+" and "+left.getType()+" for binary operator "+bn.binOp);
 	}
@@ -63,7 +123,7 @@ public class SemanticsVisitor extends Visitor {
 	public void visit(AssignStmtNode asn){
 		NameNode name = asn.name;
 		ExprNode value = asn.expr;
-		name.accept(this);
+		name.accept(new LHSSemanticsVisitor(syms));
 		value.accept(this);
 
 		if (!name.getType().isAssignable(value.getType())) {
@@ -72,8 +132,13 @@ public class SemanticsVisitor extends Visitor {
 	}
 
 	public void visit(NameNode nn){
-		for(SuffixNode suff : nn.suffs) {
-			suff.accept(this);
+		if (nn.suffs != null && nn.suffs.size() > 0) {
+			error("Suffixed names are not supported (yet)");
+		} else {
+			nn.name.accept(this);
+
+			nn.setType(nn.name.getType());
+			nn.setAttr(nn.name.getAttr());
 		}
 	}
 
@@ -100,12 +165,8 @@ public class SemanticsVisitor extends Visitor {
 		range.accept(this);
 	}
 
-	public void visit(FuncNode fn){
-      fn.accept(new TopDeclVisitor(syms));
-	}
-
-	public void visit(ParamNode pn){
-		pn.accept(new TopDeclVisitor(syms));
+	public void visit(SubDeclNode s){
+      s.accept(new TopDeclVisitor(syms));
 	}
 
 	public void visit(WhileClauseNode wcn){
@@ -120,6 +181,25 @@ public class SemanticsVisitor extends Visitor {
 	public void visit(UnaryNode un){
 		ExprNode expr = un.expr;
 		expr.accept(this);
+
+		TypeDescriptor td = new ErrorTypeDescriptor();
+
+		switch (un.unOp) {
+			case PLUS:
+			case MINUS:
+			case ABS:
+				td = Operators.unArithOp(expr.getType());
+				break;
+
+			case NOT:
+				td = Operators.unBoolOp(expr.getType());
+				break;
+		}
+
+		if (!td.isError())
+			un.setType(td);
+		else
+			error("Invalid type "+expr.getType()+" for unary operator "+un.unOp);
 	}
 
 	public void visit(StrValNode i) {
@@ -153,7 +233,6 @@ public class SemanticsVisitor extends Visitor {
 	}
 
 	public void visit(ObjDeclNode o) {
-		System.out.println("visiting object");
 		o.accept(new TopDeclVisitor(syms));
 	}
 

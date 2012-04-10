@@ -15,14 +15,11 @@ grammar MiniAda;
 //
 
 compilation returns [MiniAdaTree tree]
-   : d=direc_list c=compilation_unit_list EOF {tree=new MiniAdaTree($d.value, $c.value);};
+   : d=direc_list c=compilation_unit EOF {tree=new MiniAdaTree($d.value, $c.value);};
 
 direc_list returns [List<DirecNode> value]
 @init {value=new ArrayList<DirecNode>();}
    : (d=direc {value.add($d.value);})*;
-compilation_unit_list returns [List<CompilationNode> value]
-@init {value=new ArrayList<CompilationNode>();}
-   : (c=compilation_unit {value.add($c.value);})+;
 
 lib_suffix_list returns [List<SuffixNode> suffs]
 @init {suffs=new ArrayList<SuffixNode>();}
@@ -316,7 +313,8 @@ choice returns [ChoiceNode value]
 
 log_op returns [BinNode.Op op]
    : 'and' {op=BinNode.Op.AND;} ('then' {op=BinNode.Op.AND_THEN;})?
-   | 'or' {op=BinNode.Op.OR;} ('else' {op=BinNode.Op.OR_ELSE;})?;
+   | 'or' {op=BinNode.Op.OR;} ('else' {op=BinNode.Op.OR_ELSE;})?
+   | 'xor' {op=BinNode.Op.XOR;};
 rel_op returns [BinNode.Op op]
    : '=' {op=BinNode.Op.EQ;}
    | '<' {op=BinNode.Op.LT;}
@@ -331,13 +329,14 @@ add_op returns [BinNode.Op op]
 un_add_op returns [UnaryNode.Op unOp]
    : '+' {unOp=UnaryNode.Op.PLUS;}
    | '-' {unOp=UnaryNode.Op.MINUS;};
-un_bin_op returns [UnaryNode.Op unOp]
-   : 'not' {unOp=UnaryNode.Op.NOT;}
-   | 'abs' {unOp=UnaryNode.Op.ABS;};
 mult_op returns [BinNode.Op op]
    : '*' {op=BinNode.Op.MULT;}
    | '/' {op=BinNode.Op.DIV;}
-   | 'mod' {op=BinNode.Op.MOD;};
+   | 'mod' {op=BinNode.Op.MOD;}
+   | 'rem' {op=BinNode.Op.REM;};
+un_bin_op returns [UnaryNode.Op unOp]
+   : 'not' {unOp=UnaryNode.Op.NOT;}
+   | 'abs' {unOp=UnaryNode.Op.ABS;};
 pow_op returns [BinNode.Op op]
    : '**' {op=BinNode.Op.POW;};
 

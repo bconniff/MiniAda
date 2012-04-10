@@ -48,4 +48,17 @@ public class SymbolTable {
       }
       return null;
    }
+
+   public String toString() {
+      String result = "";
+
+      for (Map<String,SymbolAttributes> m: table) {
+         result += "Scope:\n";
+         for (String s: m.keySet()) {
+            result += "   " + s + "\n";
+         }
+      }
+
+      return result;
+   }
 }

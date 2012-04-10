@@ -1,6 +1,6 @@
 package symbols.types;
 
-public class ErrorType extends TypeDescriptor {
+public class ErrorTypeDescriptor extends TypeDescriptor {
    public String toString() {
       return "Error";
    }

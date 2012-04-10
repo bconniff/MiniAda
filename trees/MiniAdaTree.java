@@ -5,10 +5,10 @@ import java.util.List;
 
 public class MiniAdaTree extends AbstractTreeNode {
    public final List<DirecNode> direcs;
-   public final List<CompilationNode> comps;
+   public final CompilationNode comp;
 
-   public MiniAdaTree(List<DirecNode> d, List<CompilationNode> c) {
+   public MiniAdaTree(List<DirecNode> d, CompilationNode c) {
       direcs = d;
-      comps = c;
+      comp = c;
    }
 }

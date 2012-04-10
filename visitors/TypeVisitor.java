@@ -8,14 +8,8 @@ import symbols.attributes.*;
 import java.util.TreeMap;
 
 public class TypeVisitor extends TopDeclVisitor {
-   private final SymbolTable syms;
-
-   public TypeVisitor() {
-      this(new SymbolTable());
-   }
-
    public TypeVisitor(SymbolTable s) {
-      syms = s;
+      super(s);
    }
 
    public void visitChildren(AbstractTreeNode n) {

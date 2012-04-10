@@ -9,6 +9,8 @@ import symbols.*;
 import symbols.types.*;
 import symbols.attributes.*;
 
+import utils.PrettyPrint;
+
 public class Main {
    final static SymbolTable sym = new SymbolTable();
 
@@ -37,7 +39,7 @@ public class Main {
          try {
             AbstractTreeNode tree = parse.compilation(); 
             tree.accept(new SemanticsVisitor(sym)); // yay!
-            System.out.println(tree);
+            System.out.println(new PrettyPrint(tree.toString()));
          } catch (RecognitionException e) {
             e.printStackTrace();
             return;

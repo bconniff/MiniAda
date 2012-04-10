@@ -5,6 +5,10 @@ public abstract class TypeDescriptor {
       return equals(td);
    }
 
+   public boolean isError() {
+      return this instanceof ErrorTypeDescriptor;
+   }
+
    public String toString() {
       return this.getClass().getSimpleName();
    }

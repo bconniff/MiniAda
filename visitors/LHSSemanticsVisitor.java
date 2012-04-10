@@ -6,14 +6,8 @@ import symbols.types.*;
 import symbols.attributes.*;
 
 public class LHSSemanticsVisitor extends SemanticsVisitor {
-   private final SymbolTable syms;
-
-   public LHSSemanticsVisitor() {
-      this(new SymbolTable());
-   }
-
    public LHSSemanticsVisitor(SymbolTable s) {
-      syms = s;
+      super(s);
    }
 
    public void visit(IdNode n) {

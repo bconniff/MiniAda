@@ -6,14 +6,8 @@ import symbols.types.*;
 import symbols.attributes.*;
 
 public class TopDeclVisitor extends SemanticsVisitor {
-   private final SymbolTable syms;
-
-   public TopDeclVisitor() {
-      this(new SymbolTable());
-   }
-
    public TopDeclVisitor(SymbolTable s) {
-      syms = s;
+      super(s);
    }
 
    public void visitChildren(AbstractTreeNode n) {

@@ -23,7 +23,6 @@ public class TestAST {
          
          try {
             AbstractTreeNode tree = parse.compilation(); 
-            tree.accept(new SemanticsVisitor());
             System.out.println(tree);
          } catch (RecognitionException e) {
             e.printStackTrace();
