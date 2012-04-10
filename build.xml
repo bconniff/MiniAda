@@ -1,10 +1,13 @@
-<project name="MiniAda" default="compile" basedir=".">
+<project name="MiniAda" default="jar" basedir=".">
    <description>
       build file for MiniAda
    </description>
 
    <!-- set this to the path to your ANTLR version 3 jar file -->
    <property name="antlr.jar" location="antlrworks.jar"/>
+
+   <!-- name of jar file that will be built if the jar target is used -->
+   <property name="output.jar" location="miniada.jar"/>
 
    <target name="antlr">
       <java classname="org.antlr.Tool">
@@ -13,7 +16,11 @@
             <pathelement location="${antlr.jar}"/>
          </classpath>
          <arg value="-verbose"/>
-         <arg value="MiniAda.g"/>
+         <arg value="-make"/>
+         <arg value="-o"/>
+
+         <arg path="grammar"/>
+         <arg path="grammar/MiniAda.g"/>
       </java>
    </target>
 
@@ -23,64 +30,28 @@
             <pathelement path="${classpath}"/>
             <pathelement location="${antlr.jar}"/>
          </classpath>
-         <include name="MiniAdaParser.java"/>
-         <include name="Main.java"/>
       </javac>
    </target>
 
-   <target name="antlr-debug">
-      <java classname="org.antlr.Tool">
-         <classpath>
-            <pathelement path="${classpath}"/>
-            <pathelement location="${antlr.jar}"/>
-         </classpath>
-         <arg value="-verbose"/>
-         <arg value="-debug"/>
-         <arg value="MiniAda.g"/>
-      </java>
-   </target>
-
-   <target name="compile-debug" depends="antlr-debug">
-      <javac srcdir="." includeantruntime="false" listfiles="true">
-         <classpath>
-            <pathelement path="${classpath}"/>
-            <pathelement location="${antlr.jar}"/>
-         </classpath>
-         <include name="MiniAdaParser.java"/>
-         <include name="Test.java"/>
-         <include name="TestAST.java"/>
-      </javac>
-   </target>
-
-   <target name="test-ast" depends="compile-debug">
-      <java classname="TestAST">
-         <classpath>
-            <pathelement path="${classpath}"/>
-            <pathelement location="."/>
-            <pathelement location="${antlr.jar}"/>
-         </classpath>
-         <arg path="tests/proc_test.adb"/>
-         <arg path="tests/range_test.adb"/>
-         <arg path="tests/tick_test.adb"/>
-      </java>
-   </target>
-
-   <target name="test" depends="compile-debug">
-      <java classname="Test">
-         <classpath>
-            <pathelement path="${classpath}"/>
-            <pathelement location="."/>
-            <pathelement location="${antlr.jar}"/>
-         </classpath>
-         <arg path="tests/proc_test.adb"/>
-         <arg path="tests/range_test.adb"/>
-         <arg path="tests/tick_test.adb"/>
-      </java>
+   <target name="jar" depends="compile">
+      <jar destfile="${output.jar}">
+         <manifest>
+            <attribute name="Main-Class" value="Main"/>
+         </manifest>
+         <fileset dir=".">
+            <include name="**/*.class"/>
+         </fileset>
+         <zipgroupfileset file="${antlr.jar}"/>
+      </jar>
    </target>
 
    <target name="clean">
       <delete verbose="true">
          <fileset file="*.class"/>
+         <fileset file="grammar/*.class"/>
+         <fileset file="grammar/*.tokens"/>
+         <fileset file="grammar/MiniAdaLexer.java"/>
+         <fileset file="grammar/MiniAdaParser.java"/>
          <fileset file="trees/*.class"/>
          <fileset file="symbols/*.class"/>
          <fileset file="symbols/types/*.class"/>

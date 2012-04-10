@@ -2,17 +2,17 @@ import org.antlr.runtime.*;
 import org.antlr.runtime.tree.Tree;
 
 import java.io.IOException;
+
+import utils.*;
 import trees.*;
 import visitors.*;
-
+import grammar.*;
 import symbols.*;
 import symbols.types.*;
 import symbols.attributes.*;
 
-import utils.PrettyPrint;
-
 public class Main {
-   final static SymbolTable sym = new SymbolTable();
+   private final static SymbolTable sym = new SymbolTable();
 
    static {
       sym.add("Integer", new TypeAttributes(new IntegerTypeDescriptor()));
@@ -23,6 +23,8 @@ public class Main {
    }
 
    public static void main(String[] args) throws IOException {
+      final boolean showAst = option("ast", true);
+
       if (args.length < 1) {
          System.err.println("Usage: java Main <file> ...");
          return;
@@ -30,8 +32,6 @@ public class Main {
 
       for (int i = 0; i < args.length; i++) {
          if (i > 0) System.out.println();
-         System.out.println("Abstract syntax tree: "+args[i]);
-         System.out.println("-----------------------------------------");
          MiniAdaLexer lex = new MiniAdaLexer(new MiniAdaFileStream(args[i]));
          CommonTokenStream tokens = new CommonTokenStream(lex);
          MiniAdaParser parse = new MiniAdaParser(tokens);
@@ -39,11 +39,30 @@ public class Main {
          try {
             AbstractTreeNode tree = parse.compilation(); 
             tree.accept(new SemanticsVisitor(sym)); // yay!
-            System.out.println(new PrettyPrint(tree.toString()));
+
+            if (showAst) {
+               System.out.println("-----------------------------------------");
+               System.out.println("Abstract syntax tree: "+args[i]);
+               System.out.println("-----------------------------------------");
+               System.out.println(new PrettyPrint(tree.toString()));
+            }
          } catch (RecognitionException e) {
             e.printStackTrace();
             return;
          }
       }
+   }
+
+   private static boolean option(String key, boolean def) {
+      final String val = System.getProperty(key);
+
+      if (val != null) {
+         if (val.equals("on"))
+            return true;
+         if (val.equals("off"))
+            return false;
+      }
+
+      return def;
    }
 }

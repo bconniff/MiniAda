@@ -1,12 +1,16 @@
 grammar MiniAda;
 
-@header {
+@parser::header {
+   package grammar;
+
    import trees.*;
    import java.util.List;
    import java.util.ArrayList;
 }
 
 @lexer::header {
+   package grammar;
+
    import static utils.BaseConv.*;
 }
 

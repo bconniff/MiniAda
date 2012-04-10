@@ -8,56 +8,32 @@ MiniAda is developed by two students at Radford University, bconniff
 (github.com/bconniff) and jdominic (github.com/jdominic). All code is property
 of Radford University.
 
-COMPILATION (LINUX/UNIX)
+COMPILATION
 
-The source comes with a Makefile which will help build the parser for you. You
-should look in the Makefile and set the path to your ANTLR jar file.
+The source comes with an Ant build.xml file which will help build MiniAda for
+you. You should look in the build file and set the path to your ANTLR jar file.
 
-To compile the parser on a UNIX-like system, use the command:
+To build a MiniAda jar file (by default, "miniada.jar"), use the command:
 
-   make
+   ant
 
-MiniAda comes with test programs to print out the parse tree and AST for a
-given input file. To build the test programs use:
+After compilation, you can run MiniAda just like any jar, passing it a list
+of input files:
 
-   make debug
+   java -jar miniada.jar <file> ...
 
-After compilation, you can run the tests with:
+To delete all the files created by running "ant" (except the jar file), use the
+command:
 
-   java Test <file>
-   java TestAST <file>
-
-Where <file> is the input file for the parser. Similarly, you can use the
-commands:
-
-   make test
-   make test-ast
-
-Which will run the parser on all files with the suffix ".adb" in the "test/"
-directory, and print out their parse trees.
-
-To delete the files created by running "make", use the command:
-
-   make clean
-
-COMPILATION (WINDOWS)
-
-The Makefile doesn't work on Windows, so we've also provided a build.xml file
-for use with Apache's Ant build system. First, edit the build.xml file and set
-the "antlr.jar" property to point to your ANTLR jar file.
-
-The Ant build.xml provides all the options listed in the above section, which
-work as expected. Just replace the "make" command with "ant".
+   ant clean
 
 REQUIREMENTS
 
-MiniAda requires ANTLR version 3, and the Makefile assumes the command antlr3
-is available to compile ANTLR grammars. The ANTRL jar file must also be in
-Java's classpath. Since MiniAda is written in Java, it also requires a working
-Java SDK.
+Building MiniAda requires a working (and sufficiently recent) JDK, as well as
+ANTLR version 3, and Ant.
 
-MiniAda has been tested on Arch Linux, running ANTLR version 3.4 and OpenJDK
-version 1.70.
+After building the MiniAda jar file (see COMPILATION), the only requirement
+to run MiniAda is a working JDK.
 
 DIFFERENCES FROM ADA
 
