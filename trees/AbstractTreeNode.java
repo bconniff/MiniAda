@@ -8,8 +8,8 @@ import java.util.*;
 
 public abstract class AbstractTreeNode implements TreeNode {
 	private static final HashSet<Class> BASIC;
-	private TypeDescriptor symType = new ErrorTypeDescriptor();
-	private SymbolAttributes symAttr = new ErrorAttributes();
+	public TypeDescriptor symType = new ErrorTypeDescriptor();
+	public SymbolAttributes symAttr = new ErrorAttributes();
 
 	//Builds a set of the primitive types
 	static {
@@ -75,6 +75,13 @@ public abstract class AbstractTreeNode implements TreeNode {
 		//Create a buffer to build the string
 		StringBuffer toRet = new StringBuffer();
 		toRet.append("{");
+
+		if (!(symType instanceof ErrorTypeDescriptor))
+			toRet.append("TYPE : " + symType + ", ");
+
+		if (!(symAttr instanceof ErrorAttributes))
+			toRet.append("ATTR : " + symAttr.getClass().getSimpleName() + ", ");
+
 		for(Field field : fields) {
 			try {
 				//If the field is private allow it to be accessed
@@ -82,6 +89,8 @@ public abstract class AbstractTreeNode implements TreeNode {
 				Object obj = field.get(this);
 				if(obj != null) {
 					//Add name and colon
+					toRet.append(field.get(this).getClass().getSimpleName());
+					toRet.append(" ");
 					toRet.append(field.getName());
 					toRet.append(" : ");
 
@@ -101,43 +110,31 @@ public abstract class AbstractTreeNode implements TreeNode {
 							toRet.delete(toRet.length()-2, toRet.length());
 							toRet.append("]");
 						}
+					} else if(obj instanceof Collection) {
+						toRet.append("[");
+						boolean comma = false;
+						for (Object o: (Collection)obj) {
+							if (comma) toRet.append(", ");
+							else comma = true;
+							toRet.append(o.getClass().getSimpleName());
+							toRet.append(" : ");
+							toRet.append(o.toString());
+						}
+						toRet.append("]");
 					} else {
 						//If a primitive, just add it to the buffer
 						if(BASIC.contains(obj.getClass())) {
 							toRet.append(obj.toString());
 						//If a string, add quotes around
-						} else if(obj.getClass() == String.class) {
+						} else if(obj instanceof String) {
 							toRet.append("\"");
 							toRet.append(obj.toString());
 							toRet.append("\"");
-						//If a collection of objects don't add brackets
-						} else if(obj instanceof Collection) {
-							toRet.append(obj.toString());
-						//Default object behavior, print out the object with brackets around it
 						} else {
-							toRet.append("{");
-
-							if(obj instanceof AbstractTreeNode) {
-								final AbstractTreeNode a = (AbstractTreeNode)obj;
-
-								if(!(a.getType() instanceof ErrorTypeDescriptor)) {
-									toRet.append("TYPE : " + ((AbstractTreeNode)obj).getType().getClass().getSimpleName() + ", ");
-								}
-
-								if(!(a.getAttr() instanceof ErrorAttributes)) {
-									toRet.append("ATTR : " + ((AbstractTreeNode)obj).getAttr().getClass().getSimpleName() + ", ");
-								}
-							}
-
 							toRet.append(obj.toString());
-							toRet.append("}");
 						}
 					}
 					toRet.append(", ");
-				} else {
-					toRet.append(field.getName());
-					toRet.append(" : ");
-					toRet.append("null, ");
 				}
 			} catch(IllegalAccessException e) {
 				e.printStackTrace();
