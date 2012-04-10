@@ -8,7 +8,7 @@ import java.util.*;
 
 public abstract class AbstractTreeNode implements TreeNode {
 	private static final HashSet<Class> BASIC;
-	private TypeDescriptor symType = new ErrorType();
+	private TypeDescriptor symType = new ErrorTypeDescriptor();
 	private SymbolAttributes symAttr = new ErrorAttributes();
 
 	//Builds a set of the primitive types
@@ -120,7 +120,7 @@ public abstract class AbstractTreeNode implements TreeNode {
 							if(obj instanceof AbstractTreeNode) {
 								final AbstractTreeNode a = (AbstractTreeNode)obj;
 
-								if(!(a.getType() instanceof ErrorType)) {
+								if(!(a.getType() instanceof ErrorTypeDescriptor)) {
 									toRet.append("TYPE : " + ((AbstractTreeNode)obj).getType().getClass().getSimpleName() + ", ");
 								}
 
