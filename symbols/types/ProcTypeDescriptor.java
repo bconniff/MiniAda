@@ -1,14 +1,20 @@
 package symbols.types;
 
-import symbols.attributes.SymbolAttributes;
-import java.util.TreeMap;
+import java.util.LinkedHashMap;
+import trees.*;
 
 public class ProcTypeDescriptor extends TypeDescriptor {
-   public final TreeMap<String,SymbolAttributes> params;
+   public final LinkedHashMap<String,TypeDescriptor> params;
    public final String name;
 
-   public ProcTypeDescriptor(TreeMap<String,SymbolAttributes> params, String name) {
+   public ProcTypeDescriptor(LinkedHashMap<String,TypeDescriptor> params, String name) {
       this.params = params;
       this.name = name;
+   }
+
+   public TypeDescriptor applySuffix(SuffixNode s) {
+      if (s instanceof ParenSuffixNode)
+         return new VoidTypeDescriptor();
+      return new ErrorTypeDescriptor();
    }
 }

@@ -5,7 +5,7 @@ import symbols.*;
 import symbols.types.*;
 import symbols.attributes.*;
 
-import java.util.TreeMap;
+import java.util.LinkedHashMap;
 
 public class TypeVisitor extends TopDeclVisitor {
    public TypeVisitor(SymbolTable s) {
@@ -100,10 +100,31 @@ public class TypeVisitor extends TopDeclVisitor {
 
    public void visit(RecordTypeNode n) {
       error("Records are not supported (yet)");
+      /*
+      LinkedHashMap<String,SymbolAttributes> map = new LinkedHashMap<String,SymbolAttributes>();
+
+      for (RecordItemNode i: n.comps) {
+         if (i instanceof RecordComponentNode) {
+            final RecordComponentNode comp = (RecordComponentNode)i;
+
+            comp.type.accept(new TypeVisitor(syms));
+
+            for (IdNode name: comp.names) {
+               if (map.containsKey(name.id)) {
+                  error("Duplicate name in record: "+name.id);
+               } else {
+                  map.put(name.id, comp.type.getType());
+               }
+            }
+         } else {
+            error("Unsupported record component");
+         }
+      }
+      */
    }
 
    public void visit(ProcNode n) {
-      TreeMap<String,SymbolAttributes> map = new TreeMap<String,SymbolAttributes>();
+      LinkedHashMap<String,TypeDescriptor> map = new LinkedHashMap<String,TypeDescriptor>();
       for (ParamNode p: n.params) {
          p.type.accept(this);
 
@@ -111,7 +132,7 @@ public class TypeVisitor extends TopDeclVisitor {
             if (map.containsKey(id.id))
                error("Duplicate parameter " + id.id);
             else
-               map.put(id.id, p.type.getAttr());
+               map.put(id.id, p.type.getType());
          }
       }
 
@@ -128,7 +149,7 @@ public class TypeVisitor extends TopDeclVisitor {
    }
 
    public void visit(FuncNode n) {
-      TreeMap<String,SymbolAttributes> map = new TreeMap<String,SymbolAttributes>();
+      LinkedHashMap<String,TypeDescriptor> map = new LinkedHashMap<String,TypeDescriptor>();
       for (ParamNode p: n.params) {
          p.type.accept(this);
 
@@ -136,13 +157,13 @@ public class TypeVisitor extends TopDeclVisitor {
             if (map.containsKey(id.id))
                error("Duplicate parameter " + id.id);
             else
-               map.put(id.id, p.type.getAttr());
+               map.put(id.id, p.type.getType());
          }
       }
 
       n.ret.accept(this);
 
-      final TypeDescriptor td = new FuncTypeDescriptor(map, n.name.id, n.ret.getAttr());
+      final TypeDescriptor td = new FuncTypeDescriptor(map, n.name.id, n.ret.getType());
       final SymbolAttributes a = new TypeAttributes(td);
 
       n.setType(td);

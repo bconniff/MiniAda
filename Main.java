@@ -1,6 +1,7 @@
 import org.antlr.runtime.*;
 import org.antlr.runtime.tree.Tree;
 
+import java.io.File;
 import java.io.IOException;
 
 import utils.*;
@@ -23,7 +24,7 @@ public class Main {
    }
 
    public static void main(String[] args) throws IOException {
-      final boolean showAst = option("ast", true);
+      final boolean showAst = option("ast", false);
 
       if (args.length < 1) {
          System.err.println("Usage: java Main <file> ...");
@@ -35,10 +36,14 @@ public class Main {
          MiniAdaLexer lex = new MiniAdaLexer(new MiniAdaFileStream(args[i]));
          CommonTokenStream tokens = new CommonTokenStream(lex);
          MiniAdaParser parse = new MiniAdaParser(tokens);
+
+         final String basename = (new File(args[i])).getName();
+         final String mainProc = basename.substring(0,basename.lastIndexOf('.'));
          
          try {
             AbstractTreeNode tree = parse.compilation(); 
             tree.accept(new SemanticsVisitor(sym)); // yay!
+            tree.accept(new CodeGenVisitor(mainProc));
 
             if (showAst) {
                System.out.println("-----------------------------------------");

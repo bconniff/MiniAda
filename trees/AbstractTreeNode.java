@@ -27,6 +27,7 @@ public abstract class AbstractTreeNode implements TreeNode {
 		try {
 			v.getClass().getMethod("visit", new Class[]{ this.getClass() }).invoke(v, this);
 		} catch (Exception e) {
+			//e.printStackTrace();
 			System.err.println("No such method "+v.getClass().getSimpleName()+".visit("+this.getClass().getSimpleName()+")");
 			for (AbstractTreeNode n: getChildren()) {
 				n.accept(v);

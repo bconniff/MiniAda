@@ -132,14 +132,22 @@ public class SemanticsVisitor extends Visitor {
 	}
 
 	public void visit(NameNode nn){
-		if (nn.suffs != null && nn.suffs.size() > 0) {
-			error("Suffixed names are not supported (yet)");
-		} else {
-			nn.name.accept(this);
+		nn.name.accept(this);
 
-			nn.setType(nn.name.getType());
-			nn.setAttr(nn.name.getAttr());
+		TypeDescriptor t = nn.name.getType();
+
+		if (nn.suffs != null) {
+			for (int i = 0; i < nn.suffs.size(); i++) {
+				t = t.applySuffix(nn.suffs.get(i));
+			}
+
+			if (t instanceof ErrorTypeDescriptor) {
+				error("Invalid suffix for name "+nn.name.id);
+			}
 		}
+
+		nn.setType(t);
+		nn.setAttr(new TypeAttributes(t));
 	}
 
 	public void visit(ForClauseNode fcn){
