@@ -3,8 +3,9 @@
       build file for MiniAda
    </description>
 
-   <!-- set this to the path to your ANTLR version 3 jar file -->
+   <!-- set these paths to your jar files -->
    <property name="antlr.jar" location="antlrworks.jar"/>
+   <property name="jasmin.jar" location="jasmin.jar"/>
 
    <!-- name of jar file that will be built if the jar target is used -->
    <property name="output.jar" location="miniada.jar"/>
@@ -14,6 +15,7 @@
          <classpath>
             <pathelement path="${classpath}"/>
             <pathelement location="${antlr.jar}"/>
+            <pathelement location="${jasmin.jar}"/>
          </classpath>
          <arg value="-verbose"/>
          <arg value="-make"/>
@@ -29,6 +31,7 @@
          <classpath>
             <pathelement path="${classpath}"/>
             <pathelement location="${antlr.jar}"/>
+            <pathelement location="${jasmin.jar}"/>
          </classpath>
       </javac>
    </target>
@@ -42,6 +45,7 @@
             <include name="**/*.class"/>
          </fileset>
          <zipgroupfileset file="${antlr.jar}"/>
+         <zipgroupfileset file="${jasmin.jar}"/>
       </jar>
    </target>
 

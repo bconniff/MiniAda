@@ -1,9 +1,8 @@
 import org.antlr.runtime.*;
 import org.antlr.runtime.tree.Tree;
 
-import java.util.LinkedHashMap;
-import java.io.File;
-import java.io.IOException;
+import java.util.*;
+import java.io.*;
 
 import utils.*;
 import trees.*;
@@ -29,7 +28,7 @@ public class Main {
    }
 
    public static void main(String[] args) throws IOException {
-      final boolean showAst = option("ast", false);
+      //final boolean showAst = option("ast", false);
 
       if (args.length < 1) {
          System.err.println("Usage: java Main <file> ...");
@@ -44,22 +43,29 @@ public class Main {
 
          final String basename = (new File(args[i])).getName();
          final String mainProc = basename.substring(0,basename.lastIndexOf('.'));
+         final File jasFile = new File(mainProc+".j");
+         final PrintStream oldOut = System.out;
+         System.setOut(new PrintStream(new FileOutputStream(jasFile)));
          
          try {
             TreeNode tree = parse.compilation(); 
             tree.accept(new SemanticsVisitor(sym)); // yay!
             tree.accept(new CodeGenVisitor(mainProc));
 
-            if (showAst) {
+            /*if (showAst) {
                System.out.println("-----------------------------------------");
                System.out.println("Abstract syntax tree: "+args[i]);
                System.out.println("-----------------------------------------");
                System.out.println(new PrettyPrint(tree.toString()));
-            }
+            }*/
          } catch (RecognitionException e) {
             e.printStackTrace();
             return;
          }
+
+         System.setOut(oldOut);
+
+         (new jasmin.Main()).assemble(jasFile.toString());
       }
    }
 
