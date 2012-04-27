@@ -1,6 +1,7 @@
 import org.antlr.runtime.*;
 import org.antlr.runtime.tree.Tree;
 
+import java.util.LinkedHashMap;
 import java.io.File;
 import java.io.IOException;
 
@@ -14,13 +15,17 @@ import symbols.attributes.*;
 
 public class Main {
    private final static SymbolTable sym = new SymbolTable();
+   private final static LinkedHashMap<String,TypeDescriptor> putParams = new LinkedHashMap<String,TypeDescriptor>();
 
    static {
+      putParams.put("item", new StringTypeDescriptor());
+
       sym.add("Integer", new TypeAttributes(new IntegerTypeDescriptor()));
       sym.add("String", new TypeAttributes(new StringTypeDescriptor()));
       sym.add("Boolean", new TypeAttributes(new BooleanTypeDescriptor()));
       sym.add("Float", new TypeAttributes(new FloatTypeDescriptor()));
       sym.add("Character", new TypeAttributes(new CharacterTypeDescriptor()));
+      sym.add("Put_Line", new VariableAttributes(new ProcTypeDescriptor(putParams, "Put_Line")));
    }
 
    public static void main(String[] args) throws IOException {
@@ -41,7 +46,7 @@ public class Main {
          final String mainProc = basename.substring(0,basename.lastIndexOf('.'));
          
          try {
-            AbstractTreeNode tree = parse.compilation(); 
+            TreeNode tree = parse.compilation(); 
             tree.accept(new SemanticsVisitor(sym)); // yay!
             tree.accept(new CodeGenVisitor(mainProc));
 

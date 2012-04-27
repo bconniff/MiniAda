@@ -9,7 +9,6 @@ import trees.*;
 public class CodeGenVisitor extends Visitor {
    protected final String name;
 	protected final Emittor em;
-	int localNum = 0;
 
    public CodeGenVisitor(String name) {
       this.name = name.toLowerCase();
@@ -37,9 +36,9 @@ public class CodeGenVisitor extends Visitor {
 		ExprNode right = bn.r;
 		ExprNode left = bn.l;
 		right.accept(this);
-		em.emitStore(right.getType(), localNum++);
+		//em.emitStore(right.getType(), localNum++);
 		left.accept(this);
-		em.emitLoad(right.getType(), --localNum);
+		//em.emitLoad(right.getType(), --localNum);
 
 		switch (bn.binOp) {
 			case PLUS:
@@ -69,8 +68,35 @@ public class CodeGenVisitor extends Visitor {
 		}
 	}
 
+	public void visit(CallStmtNode n) {
+		n.name.accept(this);
+	}
+
 	public void visit(NameNode n) {
-		em.emitLoad(n.getType(), n.name.num);
+		if (n.suffs == null || n.suffs.size() == 0) {
+			em.emitLoad(n.getType(), n.name.num);
+		} else {
+			if (n.name.id.toLowerCase().equals("put_line")
+					&& n.suffs.size() == 1
+					&& n.suffs.get(0) instanceof ParenSuffixNode)
+			{
+				final ParenSuffixNode p = (ParenSuffixNode)n.suffs.get(0);
+
+				if (p.exprs != null && p.exprs.size() == 1) {
+					final ExprNode e = p.exprs.get(0).expr;
+
+					em.emit("\tgetstatic java/lang/System/out Ljava/io/PrintStream;\n");
+					e.accept(this);
+					em.emit("\tinvokevirtual java/io/PrintStream/println(");
+					em.emit(e.getType());
+					em.emit(")V\n");
+				} else {
+					System.err.println("I don't know what to do");
+				}
+			} else {
+				System.err.println("I don't know what to do");
+			}
+		}
 	}
 
 	public void visit(FloatValNode f) {
@@ -93,6 +119,8 @@ public class CodeGenVisitor extends Visitor {
 				em.emit("\tdup\n");
 				em.emitStore(o.type.getType(), i.num);
 			}
+
+			em.emit("\tpop\n");
 		}
 	}
 
@@ -110,6 +138,12 @@ public class CodeGenVisitor extends Visitor {
 
 	public void visit(AssignStmtNode asn){
 		asn.expr.accept(this);
+		/*em.emit("\tdup\n");
+		em.emit("\tgetstatic java/lang/System/out Ljava/io/PrintStream;\n");
+		em.emit("\tswap\n");
+		em.emit("\tinvokevirtual java/io/PrintStream/println(");
+		em.emit(asn.name.getType());
+		em.emit(")V\n"); */
 		em.emitStore(asn.name.getType(), asn.name.name.num);
 	}
 

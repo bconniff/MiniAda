@@ -34,6 +34,7 @@ public class TopDeclVisitor extends SemanticsVisitor {
 
             s.setType(n.type.getType());
             s.setAttr(new VariableAttributes(attr.thisType));
+            s.num = syms.getNum(s.id);
 
             syms.add(s.id, s.getAttr());
          } else {

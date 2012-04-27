@@ -62,6 +62,7 @@ public class TypeVisitor extends TopDeclVisitor {
 
          name.setType(td);
          name.setAttr(a);
+         name.num = syms.getNum(name.id);
 
          td.add(a);
       }
@@ -131,8 +132,10 @@ public class TypeVisitor extends TopDeclVisitor {
          for (IdNode id: p.names) {
             if (map.containsKey(id.id))
                error("Duplicate parameter " + id.id);
-            else
+            else {
                map.put(id.id, p.type.getType());
+               id.num = syms.getNum(id.id);
+            }
          }
       }
 
@@ -156,8 +159,10 @@ public class TypeVisitor extends TopDeclVisitor {
          for (IdNode id: p.names) {
             if (map.containsKey(id.id))
                error("Duplicate parameter " + id.id);
-            else
+            else {
                map.put(id.id, p.type.getType());
+               id.num = syms.getNum(id.id);
+            }
          }
       }
 

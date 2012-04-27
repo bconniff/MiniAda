@@ -18,7 +18,8 @@ public class SemanticsVisitor extends Visitor {
 	public void visit(MiniAdaTree n) { visitChildren(n); }
 
 	public void visit(CallStmtNode n) {
-		error("Subprogram calls aren't supported (yet)");
+		n.name.accept(this);
+		//error("Subprogram calls aren't supported (yet)");
 	}
 
 	public void visit(WithNode n) {
@@ -37,6 +38,7 @@ public class SemanticsVisitor extends Visitor {
 		} else if (a instanceof VariableAttributes) {
 			n.setType(((VariableAttributes)a).variableType);
 			n.setAttr(a);
+			n.num = syms.getNum(n.id);
 		} else {
 			error("Name "+n.id+" is not a variable");
 		}
@@ -131,6 +133,11 @@ public class SemanticsVisitor extends Visitor {
 		}
 	}
 
+	public void visit(ParenSuffixNode p) {
+		for (ArgNode a: p.exprs)
+			a.expr.accept(this);
+	}
+
 	public void visit(NameNode nn){
 		nn.name.accept(this);
 
@@ -138,6 +145,7 @@ public class SemanticsVisitor extends Visitor {
 
 		if (nn.suffs != null) {
 			for (int i = 0; i < nn.suffs.size(); i++) {
+				nn.suffs.get(i).accept(this);
 				t = t.applySuffix(nn.suffs.get(i));
 			}
 
@@ -250,7 +258,6 @@ public class SemanticsVisitor extends Visitor {
 	public void visit(AllSuffixNode sn){ }
 	public void visit(AttrSuffixNode sn){ }
 	public void visit(DotSuffixNode sn){ }
-	public void visit(ParenSuffixNode sn){ }
 }
 
 // vim: noet

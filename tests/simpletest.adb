@@ -1,6 +1,10 @@
 procedure simpletest is
-   a: Integer;
+   a, b: Integer;
 begin
-   a := 3 + 4 * 5;
-   Put(a);
+   b := -3 * 9;
+   a := 3 + (4 * 5 - 1) / 5;
+   a := a + 1;
+   b := a + b;
+
+   Put_Line(b);
 end simpletest;
