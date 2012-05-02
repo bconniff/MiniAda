@@ -58,33 +58,39 @@ public class Emittor {
    }
 
    public void emitEQ(TypeDescriptor t) {
-      if (t instanceof IntegerTypeDescriptor) {
-         emit("\tisub\n");
-      } else if (t instanceof FloatTypeDescriptor) {
-         emit("\tfsub\n");
-      } else if (t instanceof CharacterTypeDescriptor) {
-         emit("\tisub\n");
-      } else if (t instanceof BooleanTypeDescriptor) {
-         emit("\tisub\n");
-      } else if (t instanceof StringTypeDescriptor) {
+      if (!(t instanceof StringTypeDescriptor)) {
+         if (t instanceof IntegerTypeDescriptor) {
+            emit("\tisub\n");
+         } else if (t instanceof FloatTypeDescriptor) {
+            emit("\tfsub\n");
+         } else if (t instanceof CharacterTypeDescriptor) {
+            emit("\tisub\n");
+         } else if (t instanceof BooleanTypeDescriptor) {
+            emit("\tisub\n");
+         }
+         emitBoolOp("ifeq");
+      } else {
          emit("\tinvokevirtual java/lang/String/equals(Ljava/lang/Object;)Z\n");
-      } 
-      emitBoolOp("ifeq");
+         emitBoolOp("ifne");
+      }
    }
 
    public void emitNE(TypeDescriptor t) {
-      if (t instanceof IntegerTypeDescriptor) {
-         emit("\tisub\n");
-      } else if (t instanceof FloatTypeDescriptor) {
-         emit("\tfsub\n");
-      } else if (t instanceof CharacterTypeDescriptor) {
-         emit("\tisub\n");
-      } else if (t instanceof BooleanTypeDescriptor) {
-         emit("\tisub\n");
-      } else if (t instanceof StringTypeDescriptor) {
+      if (!(t instanceof StringTypeDescriptor)) {
+         if (t instanceof IntegerTypeDescriptor) {
+            emit("\tisub\n");
+         } else if (t instanceof FloatTypeDescriptor) {
+            emit("\tfsub\n");
+         } else if (t instanceof CharacterTypeDescriptor) {
+            emit("\tisub\n");
+         } else if (t instanceof BooleanTypeDescriptor) {
+            emit("\tisub\n");
+         } 
+         emitBoolOp("ifne");
+      } else {
          emit("\tinvokevirtual java/lang/String/equals(Ljava/lang/Object;)Z\n");
-      } 
-      emitBoolOp("ifne");
+         emitBoolOp("ifeq");
+      }
    }
 
    public void emitLE(TypeDescriptor t) {
