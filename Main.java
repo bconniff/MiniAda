@@ -28,7 +28,7 @@ public class Main {
    }
 
    public static void main(String[] args) throws IOException {
-      //final boolean showAst = option("ast", false);
+      final boolean sysOut = option("asm", false);
 
       if (args.length < 1) {
          System.err.println("Usage: java Main <file> ...");
@@ -45,7 +45,9 @@ public class Main {
          final String mainProc = basename.substring(0,basename.lastIndexOf('.'));
          final File jasFile = new File(mainProc+".j");
          final PrintStream oldOut = System.out;
-         System.setOut(new PrintStream(new FileOutputStream(jasFile)));
+
+         if (!sysOut)
+            System.setOut(new PrintStream(new FileOutputStream(jasFile)));
          
          try {
             TreeNode tree = parse.compilation(); 
@@ -63,9 +65,10 @@ public class Main {
             return;
          }
 
-         System.setOut(oldOut);
-
-         (new jasmin.Main()).assemble(jasFile.toString());
+         if (!sysOut) {
+            System.setOut(oldOut);
+            (new jasmin.Main()).assemble(jasFile.toString());
+         }
       }
    }
 

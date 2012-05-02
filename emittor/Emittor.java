@@ -3,8 +3,9 @@ package emittor;
 import symbols.types.*;
 
 public class Emittor {
-   public Emittor(String name) {
-   }
+   private int label = 0;
+
+   public Emittor(String name) { }
 
    public void emit(String text) {
       System.out.print(text);
@@ -31,6 +32,8 @@ public class Emittor {
          emit("I");
       } else if (t instanceof FloatTypeDescriptor) {
          emit("F");
+      } else if (t instanceof CharacterTypeDescriptor) {
+         emit("C");
       } else if (t instanceof BooleanTypeDescriptor) {
          emit("Z");
       } else if (t instanceof StringTypeDescriptor) {
@@ -38,6 +41,94 @@ public class Emittor {
       } else if (t instanceof VoidTypeDescriptor) {
          emit("V");
       }
+   }
+
+   private void emitBoolOp(String op) {
+      emit("\t"+op+" b"+label+"\n");
+      emit("\ticonst_0\n");
+      emit("\tgoto end_b"+label+"\n");
+      emit("\tb"+label+":\n");
+      emit("\ticonst_1\n");
+      emit("\tend_b"+label+":\n");
+      label++;
+   }
+
+   public void emitRem() {
+      emit("\tirem\n");
+   }
+
+   public void emitEQ(TypeDescriptor t) {
+      if (t instanceof IntegerTypeDescriptor) {
+         emit("\tisub\n");
+      } else if (t instanceof FloatTypeDescriptor) {
+         emit("\tfsub\n");
+      } else if (t instanceof CharacterTypeDescriptor) {
+         emit("\tisub\n");
+      } else if (t instanceof BooleanTypeDescriptor) {
+         emit("\tisub\n");
+      } else if (t instanceof StringTypeDescriptor) {
+         emit("\tinvokevirtual java/lang/String/equals(Ljava/lang/Object;)Z\n");
+      } 
+      emitBoolOp("ifeq");
+   }
+
+   public void emitNE(TypeDescriptor t) {
+      if (t instanceof IntegerTypeDescriptor) {
+         emit("\tisub\n");
+      } else if (t instanceof FloatTypeDescriptor) {
+         emit("\tfsub\n");
+      } else if (t instanceof CharacterTypeDescriptor) {
+         emit("\tisub\n");
+      } else if (t instanceof BooleanTypeDescriptor) {
+         emit("\tisub\n");
+      } else if (t instanceof StringTypeDescriptor) {
+         emit("\tinvokevirtual java/lang/String/equals(Ljava/lang/Object;)Z\n");
+      } 
+      emitBoolOp("ifne");
+   }
+
+   public void emitLE(TypeDescriptor t) {
+      if (t instanceof IntegerTypeDescriptor) {
+         emit("\tisub\n");
+      } else if (t instanceof FloatTypeDescriptor) {
+         emit("\tfcmpg\n");
+      } else if (t instanceof CharacterTypeDescriptor) {
+         emit("\tisub\n");
+      } 
+      emitBoolOp("ifle");
+   }
+
+   public void emitLT(TypeDescriptor t) {
+      if (t instanceof IntegerTypeDescriptor) {
+         emit("\tisub\n");
+      } else if (t instanceof FloatTypeDescriptor) {
+         emit("\tfcmpg\n");
+      } else if (t instanceof CharacterTypeDescriptor) {
+         emit("\tisub\n");
+      } 
+      emitBoolOp("iflt");
+   }
+
+   public void emitGE(TypeDescriptor t) {
+      if (t instanceof IntegerTypeDescriptor) {
+         emit("\tisub\n");
+      } else if (t instanceof FloatTypeDescriptor) {
+         emit("\tfcmpg\n");
+      } else if (t instanceof CharacterTypeDescriptor) {
+         emit("\tisub\n");
+      } 
+      emitBoolOp("ifge");
+   }
+
+   public void emitGT(TypeDescriptor t) {
+      if (t instanceof IntegerTypeDescriptor) {
+         emit("\tisub\n");
+      } else if (t instanceof FloatTypeDescriptor) {
+         emit("\tfcmpg\n");
+      } else if (t instanceof CharacterTypeDescriptor) {
+         emit("\tisub\n");
+      } 
+      emitBoolOp("ifgt");
    }
 
    public void emitAdd(TypeDescriptor t) {

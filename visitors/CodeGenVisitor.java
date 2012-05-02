@@ -9,6 +9,8 @@ import trees.*;
 public class CodeGenVisitor extends Visitor {
    protected final String name;
 	protected final Emittor em;
+	protected int label = -1;
+	protected int iflabel = 0;
 
    public CodeGenVisitor(String name) {
       this.name = name.toLowerCase();
@@ -32,6 +34,62 @@ public class CodeGenVisitor extends Visitor {
       em.emit(".end method\n");
    }
 
+	public void visit(LoopStmtNode lsn) {
+		int mylabel = ++label;
+
+		lsn.loop.accept(this);
+
+		for (StmtNode s: lsn.stmts)
+			s.accept(this);
+
+		em.emit("\tgoto l"+mylabel+"\n");
+		em.emit("\tend_l"+mylabel+":\n");
+	}
+
+	public void visit(WhileClauseNode wcn) {
+		em.emit("\tl"+label+":\n");
+		wcn.expr.accept(this);
+		em.emit("\tifeq end_l"+label+"\n");
+	}
+
+	public void visit(ForClauseNode fcn) {
+		final boolean reverse = fcn.reverse;
+
+		(reverse ? fcn.r.b : fcn.r.a).accept(this);
+		em.emit("\ticonst_1\n");
+		em.emit("\ti"+(reverse ? "add" : "sub")+"\n");
+		em.emitStore(fcn.id.getType(), fcn.id.num);
+		em.emit("\tl"+label+":\n");
+		em.emitLoad(fcn.id.getType(), fcn.id.num);
+		(reverse ? fcn.r.a : fcn.r.b).accept(this);
+		em.emit("\tisub\n");
+		em.emit("\tif"+(reverse ? "le" : "ge")+" end_l"+label+"\n");
+		em.emitLoad(fcn.id.getType(), fcn.id.num);
+		em.emit("\ticonst_1\n");
+		em.emit("\ti"+(reverse ? "sub" : "add")+"\n");
+		em.emitStore(fcn.id.getType(), fcn.id.num);
+	}
+
+	public void visit(IfClauseNode icn, int last) {
+		icn.expr.accept(this);
+		em.emit("\tifeq i"+iflabel+"\n");
+		
+		for (StmtNode s: icn.stmts)
+			s.accept(this);
+
+		if (last != iflabel)
+			em.emit("\tgoto i"+last+"\n");
+		em.emit("\ti"+iflabel+":\n");
+
+		iflabel++;
+	}
+
+	public void visit(IfStmtNode isn) {
+		final int lastlabel = iflabel + isn.clauses.size() - 1;
+		for (IfClauseNode i: isn.clauses)
+			visit(i, lastlabel);
+	}
+
 	public void visit(BinNode bn) {
 		ExprNode right = bn.r;
 		ExprNode left = bn.l;
@@ -41,6 +99,28 @@ public class CodeGenVisitor extends Visitor {
 		//em.emitLoad(right.getType(), --localNum);
 
 		switch (bn.binOp) {
+			case MOD:
+			case REM:
+				em.emitRem();
+				break;
+			case EQ:
+				em.emitEQ(right.getType());
+				break;
+			case NE:
+				em.emitNE(right.getType());
+				break;
+			case GT:
+				em.emitGT(right.getType());
+				break;
+			case GE:
+				em.emitGE(right.getType());
+				break;
+			case LT:
+				em.emitLT(right.getType());
+				break;
+			case LE:
+				em.emitLE(right.getType());
+				break;
 			case PLUS:
 				em.emitAdd(right.getType());
 				break;
@@ -53,6 +133,9 @@ public class CodeGenVisitor extends Visitor {
 			case DIV:
 				em.emitDiv(right.getType());
 				break;
+			default:
+				error("Oops, don't know what to do with your binary ops");
+				break;
 		}
 	}
 
@@ -64,6 +147,11 @@ public class CodeGenVisitor extends Visitor {
 			case MINUS:
 				em.emit("\tldc -1\n");
 				em.emitMul(expr.getType());
+				break;
+			case PLUS:
+				break;
+			default:
+				error("Oops, don't know what to do with your binary ops");
 				break;
 		}
 	}
@@ -105,6 +193,10 @@ public class CodeGenVisitor extends Visitor {
 
 	public void visit(IntValNode i) {
 		em.emit("\tldc "+i.val+"\n");
+	}
+
+	public void visit(BoolValNode b) {
+		em.emit("\tldc "+(b.val ? 1 : 0)+"\n");
 	}
 
 	public void visit(StrValNode s) {

@@ -160,6 +160,17 @@ public class SemanticsVisitor extends Visitor {
 
 	public void visit(ForClauseNode fcn){
 		RangeNode range = fcn.r;
+
+		TypeDescriptor td = new IntegerTypeDescriptor();
+		SymbolAttributes sa = new VariableAttributes(td);
+
+		fcn.id.setType(td);
+		fcn.id.setAttr(new VariableAttributes(td));
+
+		syms.add(fcn.id.id, sa);
+
+		fcn.id.num = syms.getNum(fcn.id.id);
+
 		range.accept(this);
 	}
 
@@ -171,6 +182,9 @@ public class SemanticsVisitor extends Visitor {
 		if (lower != null && upper != null) {
 			lower.accept(this);
 			upper.accept(this);
+			if (!(lower.getType() instanceof IntegerTypeDescriptor
+					&& upper.getType() instanceof IntegerTypeDescriptor))
+				error("Only integer ranges are supported so far");
 		} else {
 			error("Only integer ranges are supported so far");
 		}
