@@ -8,6 +8,15 @@ MiniAda is developed by two students at Radford University, bconniff
 (github.com/bconniff) and jdominic (github.com/jdominic). All code is property
 of Radford University.
 
+REQUIREMENTS
+
+Download ANTLR jar version 3 and place the jar in the main directory renaming 
+it to antlrworks.jar.
+
+Download Jasmin version 2.4 and place the jasmin.jar in the main directory.
+
+Install ANT and JDK
+
 COMPILATION
 
 The source comes with an Ant build.xml file which will help build MiniAda for
@@ -21,6 +30,10 @@ After compilation, you can run MiniAda just like any jar, passing it a list
 of input files:
 
    java -jar miniada.jar <file> ...
+
+To output the assembly code to stdout use the command-line option "-Dasm=on" 
+
+   java -Dasm=on -jar miniada.jar <file> ...
 
 To delete all the files created by running "ant" (except the jar file), use the
 command:

@@ -262,6 +262,10 @@ public class CodeGenVisitor extends Visitor {
 		em.emit(n.ret.getType());
 		em.emit("\n");
 	}
+
+	public void visit(NullStmtNode n) {
+		
+	}
 }
 
 // vim: noet

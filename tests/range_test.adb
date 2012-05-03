@@ -9,10 +9,19 @@ begin
       null;
    end loop;
 
-   b := 3 = 3.0;
+   b := (3.0 = 3.0);
+   Put_Line(b);
 
    -- with spaces
    for x in 3 .. 9 loop
       null;
+   end loop;
+
+   for y in reverse 0 .. -1 loop
+	   Put_Line(y);
+   end loop;
+
+   for z in 10 .. 15 loop
+	   Put_Line(z);
    end loop;
 end Range_Test;

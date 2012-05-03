@@ -85,7 +85,8 @@ public class Emittor {
          if (t instanceof IntegerTypeDescriptor) {
             emit("\tisub\n");
          } else if (t instanceof FloatTypeDescriptor) {
-            emit("\tfsub\n");
+            //emit("\tfsub\n");
+			emit("\tfcmpg\n");
          } else if (t instanceof CharacterTypeDescriptor) {
             emit("\tisub\n");
          } else if (t instanceof BooleanTypeDescriptor) {
