@@ -1,5 +1,6 @@
 *.class
 *.jar
+*.j
 MiniAda.tokens
 MiniAdaLexer.*
 MiniAdaParser.*
