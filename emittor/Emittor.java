@@ -43,6 +43,29 @@ public class Emittor {
       }
    }
 
+   public void emitNeg(TypeDescriptor t) {
+      if (t instanceof FloatTypeDescriptor) {
+         emit("\tfneg\n");
+      } else if (t instanceof IntegerTypeDescriptor) {
+         emit("\tineg\n");
+      }
+   }
+
+   public void emitAbs(TypeDescriptor t) {
+      emit("\tdup\n");
+      if (t instanceof FloatTypeDescriptor) {
+         emit("\tfconst_0\n");
+         emit("\tfcmpg\n");
+         emit("\tifge a"+label+"\n");
+         emit("\tfneg\n");
+      } else if (t instanceof IntegerTypeDescriptor) {
+         emit("\tifge a"+label+"\n");
+         emit("\tineg\n");
+      }
+      emit("\ta"+label+":\n");
+      label++;
+   }
+
    private void emitBoolOp(String op) {
       emit("\t"+op+" b"+label+"\n");
       emit("\ticonst_0\n");
@@ -172,6 +195,8 @@ public class Emittor {
    public void emitLoad(TypeDescriptor t, int num) {
       if (t instanceof IntegerTypeDescriptor) {
          emit("\tiload "+num+"\n");
+      } else if (t instanceof BooleanTypeDescriptor) {
+         emit("\tiload "+num+"\n");
       } else if (t instanceof FloatTypeDescriptor) {
          emit("\tfload "+num+"\n");
       } else {
@@ -181,6 +206,8 @@ public class Emittor {
 
    public void emitStore(TypeDescriptor t, int num) {
       if (t instanceof IntegerTypeDescriptor) {
+         emit("\tistore "+num+"\n");
+      } else if (t instanceof BooleanTypeDescriptor) {
          emit("\tistore "+num+"\n");
       } else if (t instanceof FloatTypeDescriptor) {
          emit("\tfstore "+num+"\n");

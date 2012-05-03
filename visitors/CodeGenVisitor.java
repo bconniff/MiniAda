@@ -145,8 +145,10 @@ public class CodeGenVisitor extends Visitor {
 
 		switch (un.unOp) {
 			case MINUS:
-				em.emit("\tldc -1\n");
-				em.emitMul(expr.getType());
+				em.emitNeg(expr.getType());
+				break;
+			case ABS:
+				em.emitAbs(expr.getType());
 				break;
 			case PLUS:
 				break;
