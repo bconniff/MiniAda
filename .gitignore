@@ -1,6 +1,7 @@
 *.class
 *.jar
 *.j
+.DS_Store
 MiniAda.tokens
 MiniAdaLexer.*
 MiniAdaParser.*

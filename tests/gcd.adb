@@ -1,8 +1,14 @@
+-- finds the greatest common demonitor of two numbers ('a' and 'b')
 procedure gcd is
+   -- inputs for the program
    a: Integer := 252;
    b: Integer := 105;
-   result: Integer := 1;
+
+   -- temporary value
    tmp: Integer;
+
+   -- output
+   result: Integer := 1;
 begin
    while b /= 0 loop
       tmp := b;

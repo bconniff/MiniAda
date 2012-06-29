@@ -29,9 +29,14 @@ public class Main {
 
    public static void main(String[] args) throws IOException {
       final boolean sysOut = option("asm", false);
+      final boolean showAst = option("tree", false);
 
       if (args.length < 1) {
-         System.err.println("Usage: java Main <file> ...");
+         System.err.println("Usage: java -jar miniada.jar <file> ...");
+         System.err.println("Options:");
+         System.err.println("   -Dasm=on   print generated assembly on (doesn't generate a class)");
+         System.err.println("   -Dtree=on  display abstract syntax tree");
+         System.err.println("MiniAda generates java class files, which can be run with the java program");
          return;
       }
 
@@ -46,26 +51,27 @@ public class Main {
          final File jasFile = new File(mainProc+".j");
          final PrintStream oldOut = System.out;
 
-         if (!sysOut)
+         if (!sysOut && !showAst)
             System.setOut(new PrintStream(new FileOutputStream(jasFile)));
          
          try {
             TreeNode tree = parse.compilation(); 
             tree.accept(new SemanticsVisitor(sym)); // yay!
-            tree.accept(new CodeGenVisitor(mainProc));
 
-            /*if (showAst) {
+            if (showAst) {
                System.out.println("-----------------------------------------");
                System.out.println("Abstract syntax tree: "+args[i]);
                System.out.println("-----------------------------------------");
                System.out.println(new PrettyPrint(tree.toString()));
-            }*/
+            } else {
+               tree.accept(new CodeGenVisitor(mainProc));
+            }
          } catch (RecognitionException e) {
             e.printStackTrace();
             return;
          }
 
-         if (!sysOut) {
+         if (!sysOut && !showAst) {
             System.setOut(oldOut);
             (new jasmin.Main()).assemble(jasFile.toString());
          }

@@ -1,3 +1,5 @@
+with Ada.Text_IO; use Ada.Text_IO;
+
 procedure Range_Test is
    -- lexer must disambiguate from range
    a: Float := 3.9 + 4.7;
@@ -10,7 +12,7 @@ begin
    end loop;
 
    b := (3.0 = 3.0);
-   Put_Line(b);
+   --Put_Line(b);
 
    -- with spaces
    for x in 3 .. 9 loop
@@ -18,10 +20,10 @@ begin
    end loop;
 
    for y in reverse 0 .. -1 loop
-	   Put_Line(y);
+	   Put_Line(y'img);
    end loop;
 
    for z in 10 .. 15 loop
-	   Put_Line(z);
+	   Put_Line(z'img);
    end loop;
 end Range_Test;
